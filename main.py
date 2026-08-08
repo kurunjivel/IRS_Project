@@ -1,5 +1,5 @@
 """
-IRS Phase 2 — Gap Analysis Engine entry point.
+IRS — Gap Analysis (Phase 2) + Readiness Scoring (Phase 3) entry point.
 
 Usage:
     python main.py <employee_id>
@@ -10,8 +10,14 @@ import json
 import logging
 import sys
 
-from services.gap_analysis_service import GapAnalysisService, EmployeeNotFoundError, GradeNotFoundError
+from services.gap_analysis_service import (
+    GapAnalysisService,
+    EmployeeNotFoundError,
+    GradeNotFoundError,
+)
 from services.json_builder import JsonBuilder
+from services.readiness.readiness_engine import ReadinessEngine
+from services.readiness.readiness_report import ReadinessReportBuilder
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,32 +28,47 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     """
-    Run the gap analysis pipeline for a given employee ID.
+    Run the full IRS pipeline for a given employee ID.
 
-    Reads the employee ID from the command line (defaults to 1),
-    runs the full gap analysis, and prints the JSON report.
+    Phase 2: Gap Analysis
+    Phase 3: Readiness Scoring
     """
     employee_id = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
-    service = GapAnalysisService()
-    builder = JsonBuilder()
+    gap_service = GapAnalysisService()
+    json_builder = JsonBuilder()
+    readiness_engine = ReadinessEngine()
+    report_builder = ReadinessReportBuilder()
 
     try:
-        logger.info("Starting gap analysis for employee_id=%s", employee_id)
-        analysis = service.run(employee_id)
-        report = builder.build(analysis)
-        print(json.dumps(report, indent=2, default=str))
-    except EmployeeNotFoundError as e:
-        logger.error(e)
+        # ── Phase 2: Gap Analysis ──────────────────────────────────────────
+        logger.info("Phase 2 — Gap analysis for employee_id=%s", employee_id)
+        gap_analysis = gap_service.run(employee_id)
+
+        gap_report = json_builder.build(gap_analysis)
+        print("\n=== Phase 2 — Gap Analysis Report ===")
+        print(json.dumps(gap_report, indent=2, default=str))
+
+        # ── Phase 3: Readiness Scoring ─────────────────────────────────────
+        logger.info("Phase 3 — Readiness scoring for employee_id=%s", employee_id)
+        readiness_result = readiness_engine.calculate(gap_analysis)
+
+        readiness_report = report_builder.build(gap_analysis["employee"], readiness_result)
+
+        print("\n=== Phase 3 — Promotion Readiness Report ===")
+        print(json.dumps(readiness_report.__dict__, indent=2, default=str))
+
+    except EmployeeNotFoundError as exc:
+        logger.error(exc)
         sys.exit(1)
-    except GradeNotFoundError as e:
-        logger.error(e)
+    except GradeNotFoundError as exc:
+        logger.error(exc)
         sys.exit(1)
-    except Exception as e:
-        logger.exception("Unexpected error: %s", e)
+    except Exception as exc:
+        logger.exception("Unexpected error: %s", exc)
         sys.exit(1)
     finally:
-        service.close()
+        gap_service.close()
 
 
 if __name__ == "__main__":
