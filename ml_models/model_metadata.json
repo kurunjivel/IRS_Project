@@ -1,0 +1,40 @@
+{
+  "model_name": "LogisticRegression",
+  "feature_columns": [
+    "experience_years",
+    "performance_rating",
+    "current_grade_encoded",
+    "target_grade_encoded",
+    "grade_gap",
+    "total_skills",
+    "average_skill_level",
+    "skill_coverage_percentage",
+    "mandatory_skill_gap_count",
+    "weighted_skill_gap",
+    "total_certifications",
+    "completed_certifications",
+    "certification_completion_rate",
+    "mandatory_certification_gap_count",
+    "total_projects",
+    "completed_projects",
+    "lead_projects",
+    "project_completion_rate",
+    "lead_project_completion_rate",
+    "average_project_rating",
+    "skill_score",
+    "certification_score",
+    "experience_score",
+    "project_score",
+    "performance_score",
+    "readiness_score"
+  ],
+  "cv_f1_macro": 0.53244,
+  "cv_accuracy": 0.534375,
+  "cv_roc_auc": 0.553592,
+  "cv_folds": 5,
+  "random_state": 42,
+  "params": {
+    "max_iter": 1000,
+    "class_weight": "balanced"
+  }
+}
