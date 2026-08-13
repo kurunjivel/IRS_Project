@@ -23,6 +23,9 @@ from api.routes import (
     prediction_router,
     recommendations_router,
     career_analysis_router,
+    auth_router,
+    employee_portal_router,
+    hr_dashboard_router,
 )
 
 # Configure logging
@@ -43,11 +46,17 @@ app = FastAPI(
 # Enable CORS for frontend development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:8000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 # ---------------------------------------------------------------------------
@@ -123,21 +132,12 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 # ---------------------------------------------------------------------------
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    """Log incoming HTTP request details and execution duration."""
     start_time = time.perf_counter()
-    try:
-        response = await call_next(request)
-    except Exception as exc:
-        duration_ms = (time.perf_counter() - start_time) * 1000.0
-        logger.error("%s %s -> unhandled error: %s (%.2f ms)", request.method, request.url.path, exc, duration_ms)
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "detail": "An unexpected error occurred processing your request.",
-                "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            },
-        )
+
+    response = await call_next(request)
+
     duration_ms = (time.perf_counter() - start_time) * 1000.0
+
     logger.info(
         "%s %s -> status %d (%.2f ms)",
         request.method,
@@ -145,12 +145,15 @@ async def log_requests(request: Request, call_next):
         response.status_code,
         duration_ms,
     )
-    return response
 
+    return response
 
 # ---------------------------------------------------------------------------
 # Route Inclusion
 # ---------------------------------------------------------------------------
+app.include_router(auth_router)
+app.include_router(employee_portal_router)
+app.include_router(hr_dashboard_router)
 app.include_router(employee_router)
 app.include_router(gap_analysis_router)
 app.include_router(readiness_router)

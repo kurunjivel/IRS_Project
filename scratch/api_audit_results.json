@@ -1,0 +1,1794 @@
+{
+  "employee_aarav": [
+    {
+      "endpoint": "POST /auth/login",
+      "status_code": 200,
+      "description": "Employee Login (aarav)",
+      "response": {
+        "user_id": 2,
+        "username": "aarav",
+        "role": "EMPLOYEE",
+        "employee_id": 1,
+        "access_token": "eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImFhcmF2Iiwicm9sZSI6IkVNUExPWUVFIiwiZW1wbG95ZWVfaWQiOjEsImV4cCI6MTc4NzE1MzE5Mn0.536f9b40361ce255c51c76837ed43a819c1af50c201272d84d797553632f4d94",
+        "token_type": "bearer"
+      }
+    },
+    {
+      "endpoint": "GET /auth/me",
+      "status_code": 200,
+      "description": "Get authenticated current user session info",
+      "response": {
+        "user_id": 2,
+        "username": "aarav",
+        "role": "EMPLOYEE",
+        "employee_id": 1
+      }
+    },
+    {
+      "endpoint": "GET /employee/me",
+      "status_code": 200,
+      "description": "Employee Self-Service Profile",
+      "response": {
+        "employee_id": 1,
+        "employee_code": "EMP001",
+        "full_name": "Aarav Sharma",
+        "email": "aarav.sharma@company.com",
+        "department": "Engineering",
+        "experience_years": 3.5,
+        "performance_rating": 4.2,
+        "joining_date": "2022-03-15",
+        "current_grade": "G2",
+        "current_grade_id": 2,
+        "target_grade": "G3",
+        "target_grade_id": 3,
+        "skills": [
+          {
+            "skill_name": "Java",
+            "category": "Programming",
+            "skill_level": 4
+          },
+          {
+            "skill_name": "SQL",
+            "category": "Database",
+            "skill_level": 3
+          },
+          {
+            "skill_name": "Spring Boot",
+            "category": "Backend",
+            "skill_level": 4
+          },
+          {
+            "skill_name": "Communication",
+            "category": "Soft Skill",
+            "skill_level": 3
+          },
+          {
+            "skill_name": "Problem Solving",
+            "category": "Soft Skill",
+            "skill_level": 4
+          }
+        ],
+        "certifications": [
+          {
+            "certification_name": "Oracle Certified Professional: Java SE Developer",
+            "provider": "Oracle",
+            "status": "Completed",
+            "completion_date": "2023-01-15",
+            "expiry_date": null
+          },
+          {
+            "certification_name": "Spring Certified Professional",
+            "provider": "VMware",
+            "status": "Completed",
+            "completion_date": "2023-08-20",
+            "expiry_date": null
+          }
+        ],
+        "projects": [
+          {
+            "project_name": "E-Commerce Core Revamp",
+            "technology": "Java, Spring Boot, React",
+            "difficulty": "Medium",
+            "domain": "Retail",
+            "role": "Backend Developer",
+            "lead_project": false,
+            "duration_months": 8,
+            "project_rating": 4.2
+          },
+          {
+            "project_name": "High-Throughput Payment Gateway",
+            "technology": "Java, SQL, Spring Boot",
+            "difficulty": "Hard",
+            "domain": "Banking",
+            "role": "Java Developer",
+            "lead_project": false,
+            "duration_months": 6,
+            "project_rating": 4.0
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "GET /employee/me/career-analysis",
+      "status_code": 200,
+      "description": "Employee Self-Service Full Career Analysis Report",
+      "response": {
+        "employee": {
+          "employee_id": 1,
+          "employee_code": "EMP001",
+          "full_name": "Aarav Sharma",
+          "email": "aarav.sharma@company.com",
+          "department": "Engineering",
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "experience_years": 3.5,
+          "performance_rating": 4.2,
+          "joining_date": "2022-03-15"
+        },
+        "gap_analysis": {
+          "skill_gaps": [
+            {
+              "skill": "React",
+              "category": "Frontend",
+              "current_level": 0,
+              "required_level": 3,
+              "gap": 3,
+              "mandatory": false
+            }
+          ],
+          "certification_gaps": [
+            {
+              "certification": "Docker Certified Associate (DCA)",
+              "provider": "Mirantis",
+              "mandatory": false
+            }
+          ],
+          "experience_gap": {
+            "current_years": 3.5,
+            "required_years": 2.5,
+            "remaining_years": 0.0
+          },
+          "project_gap": {
+            "total_projects": 2,
+            "lead_projects": 0,
+            "required_projects": 3,
+            "required_lead_projects": 0,
+            "remaining_projects": 1,
+            "remaining_lead_projects": 0
+          }
+        },
+        "readiness": {
+          "readiness_score": 78.23,
+          "readiness_level": "Almost Ready",
+          "promotion_decision": "Conditional",
+          "breakdown": {
+            "skills": {
+              "score": 32.0,
+              "max_score": 40.0,
+              "percentage": 80.0,
+              "missing_skills": [
+                "React"
+              ],
+              "weight": 40.0
+            },
+            "certifications": {
+              "score": 7.5,
+              "max_score": 15.0,
+              "completed": 1,
+              "missing": [
+                "Docker Certified Associate (DCA)"
+              ],
+              "weight": 15.0
+            },
+            "experience": {
+              "score": 15.0,
+              "current_years": 3.5,
+              "required_years": 2.5,
+              "gap_years": 0.0,
+              "weight": 15.0
+            },
+            "projects": {
+              "score": 15.33,
+              "completed": 2,
+              "required": 3,
+              "remaining": 1,
+              "lead_completed": 0,
+              "lead_required": 0,
+              "lead_remaining": 0,
+              "weight": 20.0
+            },
+            "performance": {
+              "score": 8.4,
+              "performance_rating": 4.2,
+              "weight": 10.0
+            }
+          }
+        },
+        "prediction": {
+          "employee_id": 1,
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "promotion_probability": 0.8212,
+          "prediction": "Likely Progression",
+          "model_name": "LogisticRegression"
+        },
+        "recommendations": {
+          "urgency": "Low",
+          "learning": [
+            {
+              "type": "Learning",
+              "title": "Complete: React - The Complete Guide",
+              "reason": "Your 'React' skill is at level 0 but 3 is required for the target grade (gap = 3 levels).",
+              "priority": "LOW",
+              "provider": "Udemy",
+              "duration": "55 hours",
+              "impact": "Significant improvement to readiness score",
+              "metadata": {
+                "course_id": 6,
+                "skill": "React",
+                "skill_gap": 3,
+                "mandatory": false,
+                "difficulty_level": "Intermediate"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Java Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Java Programming Masterclass",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "2.0 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 1,
+                "path_name": "Java Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: SQL Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Complete SQL Bootcamp",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "0.8 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 4,
+                "path_name": "SQL Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Spring Boot Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Mastering Spring Boot 3",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.1 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 5,
+                "path_name": "Spring Boot Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: React Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. React - The Complete Guide",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.4 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 6,
+                "path_name": "React Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Problem Solving Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Structured Problem Solving & Troubleshooting",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "0.6 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 12,
+                "path_name": "Problem Solving Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Java Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Advanced Java & Microservices",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.5 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 2,
+                "path_name": "Java Learning Path"
+              }
+            }
+          ],
+          "certifications": [
+            {
+              "type": "Certification",
+              "title": "Obtain certification: Docker Certified Associate (DCA)",
+              "reason": "You have not completed the 'Docker Certified Associate (DCA)' certification, which is a recommended requirement for the target grade.",
+              "priority": "LOW",
+              "provider": "Mirantis",
+              "duration": "",
+              "impact": "Improves certification readiness score",
+              "metadata": {
+                "certification_name": "Docker Certified Associate (DCA)",
+                "provider": "Mirantis",
+                "mandatory": false
+              }
+            }
+          ],
+          "projects": [
+            {
+              "type": "Project",
+              "title": "Complete project: Customer Support Portal",
+              "reason": "You need 1 more project(s) (required: 3, completed: 2). Completing relevant projects builds domain experience.",
+              "priority": "LOW",
+              "provider": "Healthcare \u2014 React, Spring Boot",
+              "duration": "1\u20132 months",
+              "impact": "Improves project completion rate and project readiness score",
+              "metadata": {
+                "project_id": 4,
+                "project_name": "Customer Support Portal",
+                "technology": "React, Spring Boot",
+                "difficulty": "Easy",
+                "domain": "Healthcare",
+                "role": "Contributor"
+              }
+            }
+          ],
+          "mentors": [
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Neha Gupta",
+              "reason": "Recommended mentor Neha Gupta (holds G3 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Cloud Infrastructure",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 2,
+                "full_name": "Neha Gupta",
+                "email": "neha.gupta@company.com",
+                "department": "Cloud Infrastructure",
+                "current_grade": "G3",
+                "specialisation": "Cloud Infrastructure & AWS",
+                "availability": 1
+              }
+            },
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Harsh Vardhan",
+              "reason": "Recommended mentor Harsh Vardhan (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Data & Analytics",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 6,
+                "full_name": "Harsh Vardhan",
+                "email": "harsh.vardhan@company.com",
+                "department": "Data & Analytics",
+                "current_grade": "G4",
+                "specialisation": "Analytics & SQL Optimization",
+                "availability": 1
+              }
+            },
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Priya Nair",
+              "reason": "Recommended mentor Priya Nair (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Data & Analytics",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 1,
+                "full_name": "Priya Nair",
+                "email": "priya.nair@company.com",
+                "department": "Data & Analytics",
+                "current_grade": "G4",
+                "specialisation": "Data Engineering & Python",
+                "availability": 1
+              }
+            }
+          ],
+          "summary": {
+            "total": 12,
+            "high": 0,
+            "medium": 0,
+            "low": 12
+          },
+          "timeline": [
+            {
+              "month": 2,
+              "title": "Develop recommended skills",
+              "description": "Build proficiency in 1 optional skill(s): React",
+              "category": "Learning"
+            },
+            {
+              "month": 5,
+              "title": "Pursue recommended certifications",
+              "description": "Prepare for 1 recommended certification(s): Docker Certified Associate (DCA)",
+              "category": "Certification"
+            },
+            {
+              "month": 9,
+              "title": "Target: Promotion Ready",
+              "description": "Estimated readiness: 78/100 now \u2192 90+ after completing all recommended activities. Current ML promotion probability: 82%.",
+              "category": "Readiness"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "endpoint": "GET /employee/me/roadmap",
+      "status_code": 200,
+      "description": "Employee Self-Service Milestone Timeline Roadmap",
+      "response": {
+        "timeline": [
+          {
+            "month": 2,
+            "title": "Develop recommended skills",
+            "description": "Build proficiency in 1 optional skill(s): React",
+            "category": "Learning"
+          },
+          {
+            "month": 5,
+            "title": "Pursue recommended certifications",
+            "description": "Prepare for 1 recommended certification(s): Docker Certified Associate (DCA)",
+            "category": "Certification"
+          },
+          {
+            "month": 9,
+            "title": "Target: Promotion Ready",
+            "description": "Estimated readiness: 78/100 now \u2192 90+ after completing all recommended activities. Current ML promotion probability: 82%.",
+            "category": "Readiness"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "GET /employee/me/progress",
+      "status_code": 200,
+      "description": "Employee Self-Service Readiness Score & ML Prediction Progress",
+      "response": {
+        "readiness_score": 78.23,
+        "readiness_level": "Almost Ready",
+        "promotion_decision": "Conditional",
+        "promotion_probability": 0.8212
+      }
+    },
+    {
+      "endpoint": "GET /employee/1",
+      "status_code": 200,
+      "description": "Get Employee Profile by ID (1)",
+      "response": {
+        "employee_id": 1,
+        "employee_code": "EMP001",
+        "full_name": "Aarav Sharma",
+        "email": "aarav.sharma@company.com",
+        "department": "Engineering",
+        "experience_years": 3.5,
+        "performance_rating": 4.2,
+        "joining_date": "2022-03-15",
+        "current_grade": "G2",
+        "current_grade_id": 2,
+        "target_grade": "G3",
+        "target_grade_id": 3,
+        "skills": [
+          {
+            "skill_name": "Java",
+            "category": "Programming",
+            "skill_level": 4
+          },
+          {
+            "skill_name": "SQL",
+            "category": "Database",
+            "skill_level": 3
+          },
+          {
+            "skill_name": "Spring Boot",
+            "category": "Backend",
+            "skill_level": 4
+          },
+          {
+            "skill_name": "Communication",
+            "category": "Soft Skill",
+            "skill_level": 3
+          },
+          {
+            "skill_name": "Problem Solving",
+            "category": "Soft Skill",
+            "skill_level": 4
+          }
+        ],
+        "certifications": [
+          {
+            "certification_name": "Oracle Certified Professional: Java SE Developer",
+            "provider": "Oracle",
+            "status": "Completed",
+            "completion_date": "2023-01-15",
+            "expiry_date": null
+          },
+          {
+            "certification_name": "Spring Certified Professional",
+            "provider": "VMware",
+            "status": "Completed",
+            "completion_date": "2023-08-20",
+            "expiry_date": null
+          }
+        ],
+        "projects": [
+          {
+            "project_name": "E-Commerce Core Revamp",
+            "technology": "Java, Spring Boot, React",
+            "difficulty": "Medium",
+            "domain": "Retail",
+            "role": "Backend Developer",
+            "lead_project": false,
+            "duration_months": 8,
+            "project_rating": 4.2
+          },
+          {
+            "project_name": "High-Throughput Payment Gateway",
+            "technology": "Java, SQL, Spring Boot",
+            "difficulty": "Hard",
+            "domain": "Banking",
+            "role": "Java Developer",
+            "lead_project": false,
+            "duration_months": 6,
+            "project_rating": 4.0
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "GET /gap-analysis/1",
+      "status_code": 200,
+      "description": "Get Phase 2 Gap Analysis Report for Employee ID 1",
+      "response": {
+        "employee": {
+          "employee_id": 1,
+          "employee_code": "EMP001",
+          "full_name": "Aarav Sharma",
+          "email": "aarav.sharma@company.com",
+          "department": "Engineering",
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "experience_years": 3.5,
+          "performance_rating": 4.2,
+          "joining_date": "2022-03-15"
+        },
+        "gapAnalysis": {
+          "skills": [
+            {
+              "skill": "React",
+              "category": "Frontend",
+              "current_level": 0,
+              "required_level": 3,
+              "gap": 3,
+              "mandatory": false
+            }
+          ],
+          "certifications": [
+            {
+              "certification": "Docker Certified Associate (DCA)",
+              "provider": "Mirantis",
+              "mandatory": false
+            }
+          ],
+          "experience": {
+            "current_years": 3.5,
+            "required_years": 2.5,
+            "remaining_years": 0.0
+          },
+          "projects": {
+            "total_projects": 2,
+            "lead_projects": 0,
+            "required_projects": 3,
+            "required_lead_projects": 0,
+            "remaining_projects": 1,
+            "remaining_lead_projects": 0
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "GET /readiness/1",
+      "status_code": 200,
+      "description": "Get Phase 3 Readiness Score for Employee ID 1",
+      "response": {
+        "employee": {
+          "employee_id": 1,
+          "employee_code": "EMP001",
+          "full_name": "Aarav Sharma",
+          "department": "Engineering",
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "experience_years": 3.5,
+          "performance_rating": 4.2
+        },
+        "readiness_score": 78.23,
+        "readiness_level": "Almost Ready",
+        "promotion_decision": "Conditional",
+        "breakdown": {
+          "skills": {
+            "score": 32.0,
+            "max_score": 40.0,
+            "percentage": 80.0,
+            "missing_skills": [
+              "React"
+            ],
+            "weight": 40.0
+          },
+          "certifications": {
+            "score": 7.5,
+            "max_score": 15.0,
+            "completed": 1,
+            "missing": [
+              "Docker Certified Associate (DCA)"
+            ],
+            "weight": 15.0
+          },
+          "experience": {
+            "score": 15.0,
+            "current_years": 3.5,
+            "required_years": 2.5,
+            "gap_years": 0.0,
+            "weight": 15.0
+          },
+          "projects": {
+            "score": 15.33,
+            "completed": 2,
+            "required": 3,
+            "remaining": 1,
+            "lead_completed": 0,
+            "lead_required": 0,
+            "lead_remaining": 0,
+            "weight": 20.0
+          },
+          "performance": {
+            "score": 8.4,
+            "performance_rating": 4.2,
+            "weight": 10.0
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "GET /prediction/1",
+      "status_code": 200,
+      "description": "Get Phase 5 ML Promotion Prediction for Employee ID 1",
+      "response": {
+        "employee_id": 1,
+        "current_grade": "G2",
+        "target_grade": "G3",
+        "promotion_probability": 0.8212,
+        "prediction": "Likely Progression",
+        "model_name": "LogisticRegression"
+      }
+    },
+    {
+      "endpoint": "GET /recommendations/1",
+      "status_code": 200,
+      "description": "Get Phase 6 Hybrid Recommendations for Employee ID 1",
+      "response": {
+        "urgency": "Low",
+        "learning": [
+          {
+            "type": "Learning",
+            "title": "Complete: React - The Complete Guide",
+            "reason": "Your 'React' skill is at level 0 but 3 is required for the target grade (gap = 3 levels).",
+            "priority": "LOW",
+            "provider": "Udemy",
+            "duration": "55 hours",
+            "impact": "Significant improvement to readiness score",
+            "metadata": {
+              "course_id": 6,
+              "skill": "React",
+              "skill_gap": 3,
+              "mandatory": false,
+              "difficulty_level": "Intermediate"
+            }
+          },
+          {
+            "type": "Learning",
+            "title": "Enrol in learning path: Java Learning Path",
+            "reason": "This learning path is specifically designed for employees targeting G3. Java Programming Masterclass",
+            "priority": "LOW",
+            "provider": "Internal",
+            "duration": "2.0 months",
+            "impact": "Systematic skill coverage for grade progression",
+            "metadata": {
+              "path_id": 1,
+              "path_name": "Java Learning Path"
+            }
+          },
+          {
+            "type": "Learning",
+            "title": "Enrol in learning path: SQL Learning Path",
+            "reason": "This learning path is specifically designed for employees targeting G3. Complete SQL Bootcamp",
+            "priority": "LOW",
+            "provider": "Internal",
+            "duration": "0.8 months",
+            "impact": "Systematic skill coverage for grade progression",
+            "metadata": {
+              "path_id": 4,
+              "path_name": "SQL Learning Path"
+            }
+          },
+          {
+            "type": "Learning",
+            "title": "Enrol in learning path: Spring Boot Learning Path",
+            "reason": "This learning path is specifically designed for employees targeting G3. Mastering Spring Boot 3",
+            "priority": "LOW",
+            "provider": "Internal",
+            "duration": "1.1 months",
+            "impact": "Systematic skill coverage for grade progression",
+            "metadata": {
+              "path_id": 5,
+              "path_name": "Spring Boot Learning Path"
+            }
+          },
+          {
+            "type": "Learning",
+            "title": "Enrol in learning path: React Learning Path",
+            "reason": "This learning path is specifically designed for employees targeting G3. React - The Complete Guide",
+            "priority": "LOW",
+            "provider": "Internal",
+            "duration": "1.4 months",
+            "impact": "Systematic skill coverage for grade progression",
+            "metadata": {
+              "path_id": 6,
+              "path_name": "React Learning Path"
+            }
+          },
+          {
+            "type": "Learning",
+            "title": "Enrol in learning path: Problem Solving Learning Path",
+            "reason": "This learning path is specifically designed for employees targeting G3. Structured Problem Solving & Troubleshooting",
+            "priority": "LOW",
+            "provider": "Internal",
+            "duration": "0.6 months",
+            "impact": "Systematic skill coverage for grade progression",
+            "metadata": {
+              "path_id": 12,
+              "path_name": "Problem Solving Learning Path"
+            }
+          },
+          {
+            "type": "Learning",
+            "title": "Enrol in learning path: Java Learning Path",
+            "reason": "This learning path is specifically designed for employees targeting G3. Advanced Java & Microservices",
+            "priority": "LOW",
+            "provider": "Internal",
+            "duration": "1.5 months",
+            "impact": "Systematic skill coverage for grade progression",
+            "metadata": {
+              "path_id": 2,
+              "path_name": "Java Learning Path"
+            }
+          }
+        ],
+        "certifications": [
+          {
+            "type": "Certification",
+            "title": "Obtain certification: Docker Certified Associate (DCA)",
+            "reason": "You have not completed the 'Docker Certified Associate (DCA)' certification, which is a recommended requirement for the target grade.",
+            "priority": "LOW",
+            "provider": "Mirantis",
+            "duration": "",
+            "impact": "Improves certification readiness score",
+            "metadata": {
+              "certification_name": "Docker Certified Associate (DCA)",
+              "provider": "Mirantis",
+              "mandatory": false
+            }
+          }
+        ],
+        "projects": [
+          {
+            "type": "Project",
+            "title": "Complete project: Customer Support Portal",
+            "reason": "You need 1 more project(s) (required: 3, completed: 2). Completing relevant projects builds domain experience.",
+            "priority": "LOW",
+            "provider": "Healthcare \u2014 React, Spring Boot",
+            "duration": "1\u20132 months",
+            "impact": "Improves project completion rate and project readiness score",
+            "metadata": {
+              "project_id": 4,
+              "project_name": "Customer Support Portal",
+              "technology": "React, Spring Boot",
+              "difficulty": "Easy",
+              "domain": "Healthcare",
+              "role": "Contributor"
+            }
+          }
+        ],
+        "mentors": [
+          {
+            "type": "Mentorship",
+            "title": "Connect with mentor: Neha Gupta",
+            "reason": "Recommended mentor Neha Gupta (holds G3 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+            "priority": "LOW",
+            "provider": "Cloud Infrastructure",
+            "duration": "Ongoing",
+            "impact": "Personalised guidance, career advice, and skill development support",
+            "metadata": {
+              "mentor_id": 2,
+              "full_name": "Neha Gupta",
+              "email": "neha.gupta@company.com",
+              "department": "Cloud Infrastructure",
+              "current_grade": "G3",
+              "specialisation": "Cloud Infrastructure & AWS",
+              "availability": 1
+            }
+          },
+          {
+            "type": "Mentorship",
+            "title": "Connect with mentor: Harsh Vardhan",
+            "reason": "Recommended mentor Harsh Vardhan (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+            "priority": "LOW",
+            "provider": "Data & Analytics",
+            "duration": "Ongoing",
+            "impact": "Personalised guidance, career advice, and skill development support",
+            "metadata": {
+              "mentor_id": 6,
+              "full_name": "Harsh Vardhan",
+              "email": "harsh.vardhan@company.com",
+              "department": "Data & Analytics",
+              "current_grade": "G4",
+              "specialisation": "Analytics & SQL Optimization",
+              "availability": 1
+            }
+          },
+          {
+            "type": "Mentorship",
+            "title": "Connect with mentor: Priya Nair",
+            "reason": "Recommended mentor Priya Nair (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+            "priority": "LOW",
+            "provider": "Data & Analytics",
+            "duration": "Ongoing",
+            "impact": "Personalised guidance, career advice, and skill development support",
+            "metadata": {
+              "mentor_id": 1,
+              "full_name": "Priya Nair",
+              "email": "priya.nair@company.com",
+              "department": "Data & Analytics",
+              "current_grade": "G4",
+              "specialisation": "Data Engineering & Python",
+              "availability": 1
+            }
+          }
+        ],
+        "summary": {
+          "total": 12,
+          "high": 0,
+          "medium": 0,
+          "low": 12
+        },
+        "timeline": [
+          {
+            "month": 2,
+            "title": "Develop recommended skills",
+            "description": "Build proficiency in 1 optional skill(s): React",
+            "category": "Learning"
+          },
+          {
+            "month": 5,
+            "title": "Pursue recommended certifications",
+            "description": "Prepare for 1 recommended certification(s): Docker Certified Associate (DCA)",
+            "category": "Certification"
+          },
+          {
+            "month": 9,
+            "title": "Target: Promotion Ready",
+            "description": "Estimated readiness: 78/100 now \u2192 90+ after completing all recommended activities. Current ML promotion probability: 82%.",
+            "category": "Readiness"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "GET /career-analysis/1",
+      "status_code": 200,
+      "description": "Get Phase 7 Consolidated Career Analysis Report for Employee ID 1",
+      "response": {
+        "employee": {
+          "employee_id": 1,
+          "employee_code": "EMP001",
+          "full_name": "Aarav Sharma",
+          "email": "aarav.sharma@company.com",
+          "department": "Engineering",
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "experience_years": 3.5,
+          "performance_rating": 4.2,
+          "joining_date": "2022-03-15"
+        },
+        "gap_analysis": {
+          "skill_gaps": [
+            {
+              "skill": "React",
+              "category": "Frontend",
+              "current_level": 0,
+              "required_level": 3,
+              "gap": 3,
+              "mandatory": false
+            }
+          ],
+          "certification_gaps": [
+            {
+              "certification": "Docker Certified Associate (DCA)",
+              "provider": "Mirantis",
+              "mandatory": false
+            }
+          ],
+          "experience_gap": {
+            "current_years": 3.5,
+            "required_years": 2.5,
+            "remaining_years": 0.0
+          },
+          "project_gap": {
+            "total_projects": 2,
+            "lead_projects": 0,
+            "required_projects": 3,
+            "required_lead_projects": 0,
+            "remaining_projects": 1,
+            "remaining_lead_projects": 0
+          }
+        },
+        "readiness": {
+          "readiness_score": 78.23,
+          "readiness_level": "Almost Ready",
+          "promotion_decision": "Conditional",
+          "breakdown": {
+            "skills": {
+              "score": 32.0,
+              "max_score": 40.0,
+              "percentage": 80.0,
+              "missing_skills": [
+                "React"
+              ],
+              "weight": 40.0
+            },
+            "certifications": {
+              "score": 7.5,
+              "max_score": 15.0,
+              "completed": 1,
+              "missing": [
+                "Docker Certified Associate (DCA)"
+              ],
+              "weight": 15.0
+            },
+            "experience": {
+              "score": 15.0,
+              "current_years": 3.5,
+              "required_years": 2.5,
+              "gap_years": 0.0,
+              "weight": 15.0
+            },
+            "projects": {
+              "score": 15.33,
+              "completed": 2,
+              "required": 3,
+              "remaining": 1,
+              "lead_completed": 0,
+              "lead_required": 0,
+              "lead_remaining": 0,
+              "weight": 20.0
+            },
+            "performance": {
+              "score": 8.4,
+              "performance_rating": 4.2,
+              "weight": 10.0
+            }
+          }
+        },
+        "prediction": {
+          "employee_id": 1,
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "promotion_probability": 0.8212,
+          "prediction": "Likely Progression",
+          "model_name": "LogisticRegression"
+        },
+        "recommendations": {
+          "urgency": "Low",
+          "learning": [
+            {
+              "type": "Learning",
+              "title": "Complete: React - The Complete Guide",
+              "reason": "Your 'React' skill is at level 0 but 3 is required for the target grade (gap = 3 levels).",
+              "priority": "LOW",
+              "provider": "Udemy",
+              "duration": "55 hours",
+              "impact": "Significant improvement to readiness score",
+              "metadata": {
+                "course_id": 6,
+                "skill": "React",
+                "skill_gap": 3,
+                "mandatory": false,
+                "difficulty_level": "Intermediate"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Java Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Java Programming Masterclass",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "2.0 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 1,
+                "path_name": "Java Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: SQL Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Complete SQL Bootcamp",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "0.8 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 4,
+                "path_name": "SQL Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Spring Boot Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Mastering Spring Boot 3",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.1 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 5,
+                "path_name": "Spring Boot Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: React Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. React - The Complete Guide",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.4 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 6,
+                "path_name": "React Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Problem Solving Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Structured Problem Solving & Troubleshooting",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "0.6 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 12,
+                "path_name": "Problem Solving Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Java Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Advanced Java & Microservices",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.5 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 2,
+                "path_name": "Java Learning Path"
+              }
+            }
+          ],
+          "certifications": [
+            {
+              "type": "Certification",
+              "title": "Obtain certification: Docker Certified Associate (DCA)",
+              "reason": "You have not completed the 'Docker Certified Associate (DCA)' certification, which is a recommended requirement for the target grade.",
+              "priority": "LOW",
+              "provider": "Mirantis",
+              "duration": "",
+              "impact": "Improves certification readiness score",
+              "metadata": {
+                "certification_name": "Docker Certified Associate (DCA)",
+                "provider": "Mirantis",
+                "mandatory": false
+              }
+            }
+          ],
+          "projects": [
+            {
+              "type": "Project",
+              "title": "Complete project: Customer Support Portal",
+              "reason": "You need 1 more project(s) (required: 3, completed: 2). Completing relevant projects builds domain experience.",
+              "priority": "LOW",
+              "provider": "Healthcare \u2014 React, Spring Boot",
+              "duration": "1\u20132 months",
+              "impact": "Improves project completion rate and project readiness score",
+              "metadata": {
+                "project_id": 4,
+                "project_name": "Customer Support Portal",
+                "technology": "React, Spring Boot",
+                "difficulty": "Easy",
+                "domain": "Healthcare",
+                "role": "Contributor"
+              }
+            }
+          ],
+          "mentors": [
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Neha Gupta",
+              "reason": "Recommended mentor Neha Gupta (holds G3 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Cloud Infrastructure",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 2,
+                "full_name": "Neha Gupta",
+                "email": "neha.gupta@company.com",
+                "department": "Cloud Infrastructure",
+                "current_grade": "G3",
+                "specialisation": "Cloud Infrastructure & AWS",
+                "availability": 1
+              }
+            },
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Harsh Vardhan",
+              "reason": "Recommended mentor Harsh Vardhan (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Data & Analytics",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 6,
+                "full_name": "Harsh Vardhan",
+                "email": "harsh.vardhan@company.com",
+                "department": "Data & Analytics",
+                "current_grade": "G4",
+                "specialisation": "Analytics & SQL Optimization",
+                "availability": 1
+              }
+            },
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Priya Nair",
+              "reason": "Recommended mentor Priya Nair (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Data & Analytics",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 1,
+                "full_name": "Priya Nair",
+                "email": "priya.nair@company.com",
+                "department": "Data & Analytics",
+                "current_grade": "G4",
+                "specialisation": "Data Engineering & Python",
+                "availability": 1
+              }
+            }
+          ],
+          "summary": {
+            "total": 12,
+            "high": 0,
+            "medium": 0,
+            "low": 12
+          },
+          "timeline": [
+            {
+              "month": 2,
+              "title": "Develop recommended skills",
+              "description": "Build proficiency in 1 optional skill(s): React",
+              "category": "Learning"
+            },
+            {
+              "month": 5,
+              "title": "Pursue recommended certifications",
+              "description": "Prepare for 1 recommended certification(s): Docker Certified Associate (DCA)",
+              "category": "Certification"
+            },
+            {
+              "month": 9,
+              "title": "Target: Promotion Ready",
+              "description": "Estimated readiness: 78/100 now \u2192 90+ after completing all recommended activities. Current ML promotion probability: 82%.",
+              "category": "Readiness"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "hr_admin": [
+    {
+      "endpoint": "POST /auth/login",
+      "status_code": 401,
+      "description": "HR Administrator Login (hr)",
+      "response": {
+        "detail": "Invalid username or password",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /auth/me",
+      "status_code": 401,
+      "description": "Get authenticated HR user session info",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /hr/employees",
+      "status_code": 401,
+      "description": "List all active employees in organization",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /hr/roles",
+      "status_code": 401,
+      "description": "List available target roles/grades",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /hr/roles/3/candidates",
+      "status_code": 401,
+      "description": "Rank candidate employees for Target Role G3",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /hr/employees/1/career-analysis",
+      "status_code": 401,
+      "description": "Detailed employee career analysis with HR third-person messaging for Employee ID 1",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /hr/employees/1/promotion-status",
+      "status_code": 401,
+      "description": "HR Third-Person Promotion Assessment for Employee ID 1",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /hr/analytics",
+      "status_code": 401,
+      "description": "HR Talent Pipeline Workforce Analytics",
+      "response": {
+        "detail": "Invalid or expired authentication token",
+        "status_code": 401
+      }
+    },
+    {
+      "endpoint": "GET /employee/1",
+      "status_code": 200,
+      "description": "HR View Employee Profile by ID 1",
+      "response": {
+        "employee_id": 1,
+        "employee_code": "EMP001",
+        "full_name": "Aarav Sharma",
+        "email": "aarav.sharma@company.com",
+        "department": "Engineering",
+        "experience_years": 3.5,
+        "performance_rating": 4.2,
+        "joining_date": "2022-03-15",
+        "current_grade": "G2",
+        "current_grade_id": 2,
+        "target_grade": "G3",
+        "target_grade_id": 3,
+        "skills": [
+          {
+            "skill_name": "Java",
+            "category": "Programming",
+            "skill_level": 4
+          },
+          {
+            "skill_name": "SQL",
+            "category": "Database",
+            "skill_level": 3
+          },
+          {
+            "skill_name": "Spring Boot",
+            "category": "Backend",
+            "skill_level": 4
+          },
+          {
+            "skill_name": "Communication",
+            "category": "Soft Skill",
+            "skill_level": 3
+          },
+          {
+            "skill_name": "Problem Solving",
+            "category": "Soft Skill",
+            "skill_level": 4
+          }
+        ],
+        "certifications": [
+          {
+            "certification_name": "Oracle Certified Professional: Java SE Developer",
+            "provider": "Oracle",
+            "status": "Completed",
+            "completion_date": "2023-01-15",
+            "expiry_date": null
+          },
+          {
+            "certification_name": "Spring Certified Professional",
+            "provider": "VMware",
+            "status": "Completed",
+            "completion_date": "2023-08-20",
+            "expiry_date": null
+          }
+        ],
+        "projects": [
+          {
+            "project_name": "E-Commerce Core Revamp",
+            "technology": "Java, Spring Boot, React",
+            "difficulty": "Medium",
+            "domain": "Retail",
+            "role": "Backend Developer",
+            "lead_project": false,
+            "duration_months": 8,
+            "project_rating": 4.2
+          },
+          {
+            "project_name": "High-Throughput Payment Gateway",
+            "technology": "Java, SQL, Spring Boot",
+            "difficulty": "Hard",
+            "domain": "Banking",
+            "role": "Java Developer",
+            "lead_project": false,
+            "duration_months": 6,
+            "project_rating": 4.0
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "GET /career-analysis/1",
+      "status_code": 200,
+      "description": "HR View Consolidated Career Analysis Report for Employee ID 1",
+      "response": {
+        "employee": {
+          "employee_id": 1,
+          "employee_code": "EMP001",
+          "full_name": "Aarav Sharma",
+          "email": "aarav.sharma@company.com",
+          "department": "Engineering",
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "experience_years": 3.5,
+          "performance_rating": 4.2,
+          "joining_date": "2022-03-15"
+        },
+        "gap_analysis": {
+          "skill_gaps": [
+            {
+              "skill": "React",
+              "category": "Frontend",
+              "current_level": 0,
+              "required_level": 3,
+              "gap": 3,
+              "mandatory": false
+            }
+          ],
+          "certification_gaps": [
+            {
+              "certification": "Docker Certified Associate (DCA)",
+              "provider": "Mirantis",
+              "mandatory": false
+            }
+          ],
+          "experience_gap": {
+            "current_years": 3.5,
+            "required_years": 2.5,
+            "remaining_years": 0.0
+          },
+          "project_gap": {
+            "total_projects": 2,
+            "lead_projects": 0,
+            "required_projects": 3,
+            "required_lead_projects": 0,
+            "remaining_projects": 1,
+            "remaining_lead_projects": 0
+          }
+        },
+        "readiness": {
+          "readiness_score": 78.23,
+          "readiness_level": "Almost Ready",
+          "promotion_decision": "Conditional",
+          "breakdown": {
+            "skills": {
+              "score": 32.0,
+              "max_score": 40.0,
+              "percentage": 80.0,
+              "missing_skills": [
+                "React"
+              ],
+              "weight": 40.0
+            },
+            "certifications": {
+              "score": 7.5,
+              "max_score": 15.0,
+              "completed": 1,
+              "missing": [
+                "Docker Certified Associate (DCA)"
+              ],
+              "weight": 15.0
+            },
+            "experience": {
+              "score": 15.0,
+              "current_years": 3.5,
+              "required_years": 2.5,
+              "gap_years": 0.0,
+              "weight": 15.0
+            },
+            "projects": {
+              "score": 15.33,
+              "completed": 2,
+              "required": 3,
+              "remaining": 1,
+              "lead_completed": 0,
+              "lead_required": 0,
+              "lead_remaining": 0,
+              "weight": 20.0
+            },
+            "performance": {
+              "score": 8.4,
+              "performance_rating": 4.2,
+              "weight": 10.0
+            }
+          }
+        },
+        "prediction": {
+          "employee_id": 1,
+          "current_grade": "G2",
+          "target_grade": "G3",
+          "promotion_probability": 0.8212,
+          "prediction": "Likely Progression",
+          "model_name": "LogisticRegression"
+        },
+        "recommendations": {
+          "urgency": "Low",
+          "learning": [
+            {
+              "type": "Learning",
+              "title": "Complete: React - The Complete Guide",
+              "reason": "Your 'React' skill is at level 0 but 3 is required for the target grade (gap = 3 levels).",
+              "priority": "LOW",
+              "provider": "Udemy",
+              "duration": "55 hours",
+              "impact": "Significant improvement to readiness score",
+              "metadata": {
+                "course_id": 6,
+                "skill": "React",
+                "skill_gap": 3,
+                "mandatory": false,
+                "difficulty_level": "Intermediate"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Java Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Java Programming Masterclass",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "2.0 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 1,
+                "path_name": "Java Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: SQL Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Complete SQL Bootcamp",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "0.8 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 4,
+                "path_name": "SQL Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Spring Boot Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Mastering Spring Boot 3",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.1 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 5,
+                "path_name": "Spring Boot Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: React Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. React - The Complete Guide",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.4 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 6,
+                "path_name": "React Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Problem Solving Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Structured Problem Solving & Troubleshooting",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "0.6 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 12,
+                "path_name": "Problem Solving Learning Path"
+              }
+            },
+            {
+              "type": "Learning",
+              "title": "Enrol in learning path: Java Learning Path",
+              "reason": "This learning path is specifically designed for employees targeting G3. Advanced Java & Microservices",
+              "priority": "LOW",
+              "provider": "Internal",
+              "duration": "1.5 months",
+              "impact": "Systematic skill coverage for grade progression",
+              "metadata": {
+                "path_id": 2,
+                "path_name": "Java Learning Path"
+              }
+            }
+          ],
+          "certifications": [
+            {
+              "type": "Certification",
+              "title": "Obtain certification: Docker Certified Associate (DCA)",
+              "reason": "You have not completed the 'Docker Certified Associate (DCA)' certification, which is a recommended requirement for the target grade.",
+              "priority": "LOW",
+              "provider": "Mirantis",
+              "duration": "",
+              "impact": "Improves certification readiness score",
+              "metadata": {
+                "certification_name": "Docker Certified Associate (DCA)",
+                "provider": "Mirantis",
+                "mandatory": false
+              }
+            }
+          ],
+          "projects": [
+            {
+              "type": "Project",
+              "title": "Complete project: Customer Support Portal",
+              "reason": "You need 1 more project(s) (required: 3, completed: 2). Completing relevant projects builds domain experience.",
+              "priority": "LOW",
+              "provider": "Healthcare \u2014 React, Spring Boot",
+              "duration": "1\u20132 months",
+              "impact": "Improves project completion rate and project readiness score",
+              "metadata": {
+                "project_id": 4,
+                "project_name": "Customer Support Portal",
+                "technology": "React, Spring Boot",
+                "difficulty": "Easy",
+                "domain": "Healthcare",
+                "role": "Contributor"
+              }
+            }
+          ],
+          "mentors": [
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Neha Gupta",
+              "reason": "Recommended mentor Neha Gupta (holds G3 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Cloud Infrastructure",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 2,
+                "full_name": "Neha Gupta",
+                "email": "neha.gupta@company.com",
+                "department": "Cloud Infrastructure",
+                "current_grade": "G3",
+                "specialisation": "Cloud Infrastructure & AWS",
+                "availability": 1
+              }
+            },
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Harsh Vardhan",
+              "reason": "Recommended mentor Harsh Vardhan (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Data & Analytics",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 6,
+                "full_name": "Harsh Vardhan",
+                "email": "harsh.vardhan@company.com",
+                "department": "Data & Analytics",
+                "current_grade": "G4",
+                "specialisation": "Analytics & SQL Optimization",
+                "availability": 1
+              }
+            },
+            {
+              "type": "Mentorship",
+              "title": "Connect with mentor: Priya Nair",
+              "reason": "Recommended mentor Priya Nair (holds G4 and is available for mentoring). A mentor can help accelerate your journey to G3.",
+              "priority": "LOW",
+              "provider": "Data & Analytics",
+              "duration": "Ongoing",
+              "impact": "Personalised guidance, career advice, and skill development support",
+              "metadata": {
+                "mentor_id": 1,
+                "full_name": "Priya Nair",
+                "email": "priya.nair@company.com",
+                "department": "Data & Analytics",
+                "current_grade": "G4",
+                "specialisation": "Data Engineering & Python",
+                "availability": 1
+              }
+            }
+          ],
+          "summary": {
+            "total": 12,
+            "high": 0,
+            "medium": 0,
+            "low": 12
+          },
+          "timeline": [
+            {
+              "month": 2,
+              "title": "Develop recommended skills",
+              "description": "Build proficiency in 1 optional skill(s): React",
+              "category": "Learning"
+            },
+            {
+              "month": 5,
+              "title": "Pursue recommended certifications",
+              "description": "Prepare for 1 recommended certification(s): Docker Certified Associate (DCA)",
+              "category": "Certification"
+            },
+            {
+              "month": 9,
+              "title": "Target: Promotion Ready",
+              "description": "Estimated readiness: 78/100 now \u2192 90+ after completing all recommended activities. Current ML promotion probability: 82%.",
+              "category": "Readiness"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "rbac_checks": [
+    {
+      "test": "Employee 'aarav' accessing HR Employee List (/hr/employees)",
+      "expected_status": 403,
+      "actual_status": 403,
+      "status_matched": true,
+      "response": {
+        "detail": "Forbidden: HR access required",
+        "status_code": 403
+      }
+    },
+    {
+      "test": "Employee 'aarav' accessing HR Roles List (/hr/roles)",
+      "expected_status": 403,
+      "actual_status": 403,
+      "status_matched": true,
+      "response": {
+        "detail": "Forbidden: HR access required",
+        "status_code": 403
+      }
+    },
+    {
+      "test": "Employee 'aarav' accessing HR Candidate Ranking (/hr/roles/3/candidates)",
+      "expected_status": 403,
+      "actual_status": 403,
+      "status_matched": true,
+      "response": {
+        "detail": "Forbidden: HR access required",
+        "status_code": 403
+      }
+    },
+    {
+      "test": "Employee 'aarav' accessing HR Candidate Career Analysis (/hr/employees/1/career-analysis)",
+      "expected_status": 403,
+      "actual_status": 403,
+      "status_matched": true,
+      "response": {
+        "detail": "Forbidden: HR access required",
+        "status_code": 403
+      }
+    },
+    {
+      "test": "Employee 'aarav' accessing HR Candidate Promotion Status (/hr/employees/1/promotion-status)",
+      "expected_status": 403,
+      "actual_status": 403,
+      "status_matched": true,
+      "response": {
+        "detail": "Forbidden: HR access required",
+        "status_code": 403
+      }
+    },
+    {
+      "test": "Employee 'aarav' accessing HR Analytics (/hr/analytics)",
+      "expected_status": 403,
+      "actual_status": 403,
+      "status_matched": true,
+      "response": {
+        "detail": "Forbidden: HR access required",
+        "status_code": 403
+      }
+    },
+    {
+      "test": "Unauthenticated user accessing protected endpoint (/employee/me)",
+      "expected_status": 401,
+      "actual_status": 401,
+      "status_matched": true,
+      "response": {
+        "detail": "Authentication token is required",
+        "status_code": 401
+      }
+    },
+    {
+      "test": "Unauthenticated user accessing HR Analytics (/hr/analytics)",
+      "expected_status": 401,
+      "actual_status": 401,
+      "status_matched": true,
+      "response": {
+        "detail": "Authentication token is required",
+        "status_code": 401
+      }
+    }
+  ],
+  "health": {
+    "status_code": 200,
+    "response": {
+      "status": "ok",
+      "version": "1.0.0"
+    }
+  }
+}

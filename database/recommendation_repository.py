@@ -24,14 +24,27 @@ logger = logging.getLogger(__name__)
 class RecommendationRepository:
     """Repository for recommendation-related database queries."""
 
-    def __init__(self) -> None:
-        """Initialise the repository and borrow a connection from the pool."""
-        self._conn = get_connection()
+    def __init__(self, conn: Optional[mysql.connector.pooling.PooledMySQLConnection] = None) -> None:
+        """Initialise repository with an optional custom connection."""
+        self._custom_conn = conn
 
     def close(self) -> None:
-        """Return the connection back to the pool."""
-        if self._conn and self._conn.is_connected():
-            self._conn.close()
+        """Return the custom connection back to the pool if owned by this instance."""
+        if self._custom_conn and hasattr(self._custom_conn, "is_connected") and self._custom_conn.is_connected():
+            try:
+                self._custom_conn.close()
+            except Exception:
+                pass
+
+    def _get_conn(self):
+        return self._custom_conn or get_connection()
+
+    def _release_conn(self, conn) -> None:
+        if not self._custom_conn and conn and hasattr(conn, "close"):
+            try:
+                conn.close()
+            except Exception:
+                pass
 
     # ------------------------------------------------------------------
     # Courses
@@ -62,15 +75,20 @@ class RecommendationRepository:
             WHERE LOWER(s.skill_name) = LOWER(%s)
             ORDER BY FIELD(c.difficulty, 'Beginner', 'Intermediate', 'Advanced') ASC
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (skill_name,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (skill_name,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_courses_for_skill(%s) failed: %s", skill_name, e)
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_all_courses(self) -> list[dict]:
         """
@@ -93,15 +111,20 @@ class RecommendationRepository:
             JOIN skills s ON c.skill_id = s.skill_id
             ORDER BY s.skill_name, FIELD(c.difficulty, 'Beginner', 'Intermediate', 'Advanced')
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_all_courses() failed: %s", e)
             raise
+        finally:
+            self._release_conn(conn)
 
     # ------------------------------------------------------------------
     # Learning paths
@@ -133,17 +156,22 @@ class RecommendationRepository:
             WHERE gsr.grade_id = %s
             ORDER BY lp.priority ASC
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (grade_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (grade_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "get_learning_paths_for_grade(%s) failed: %s", grade_id, e
             )
             raise
+        finally:
+            self._release_conn(conn)
 
     # ------------------------------------------------------------------
     # Certifications
@@ -170,17 +198,22 @@ class RecommendationRepository:
             WHERE LOWER(certification_name) = LOWER(%s)
             LIMIT 1
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (certification_name,))
-            row = cursor.fetchone()
-            cursor.close()
-            return row
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (certification_name,))
+                row = cursor.fetchone()
+                return row
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "get_certification_details(%s) failed: %s", certification_name, e
             )
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_certifications_for_grade(self, grade_id: int) -> list[dict]:
         """
@@ -203,17 +236,22 @@ class RecommendationRepository:
             WHERE gcr.grade_id = %s
             ORDER BY gcr.mandatory DESC, c.certification_name
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (grade_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (grade_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "get_certifications_for_grade(%s) failed: %s", grade_id, e
             )
             raise
+        finally:
+            self._release_conn(conn)
 
     # ------------------------------------------------------------------
     # Projects
@@ -245,17 +283,22 @@ class RecommendationRepository:
                 FIELD(p.difficulty, 'Easy', 'Medium', 'Hard'),
                 p.project_name
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "get_recommended_projects(%s) failed: %s", grade_id, e
             )
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_all_projects(self) -> list[dict]:
         """
@@ -274,15 +317,20 @@ class RecommendationRepository:
             FROM projects p
             ORDER BY FIELD(p.difficulty, 'Easy', 'Medium', 'Hard'), p.project_name
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_all_projects() failed: %s", e)
             raise
+        finally:
+            self._release_conn(conn)
 
     # ------------------------------------------------------------------
     # Mentors
@@ -319,17 +367,22 @@ class RecommendationRepository:
             ORDER BY e.current_grade_id ASC, e.full_name
             LIMIT 5
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (target_grade_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (target_grade_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "get_mentors_for_grade(%s) failed: %s", target_grade_id, e
             )
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_mentors_for_skill(self, skill_name: str) -> list[dict]:
         """
@@ -360,17 +413,22 @@ class RecommendationRepository:
             ORDER BY e.current_grade_id DESC, e.full_name
             LIMIT 3
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (f"%{skill_name}%",))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (f"%{skill_name}%",))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "get_mentors_for_skill(%s) failed: %s", skill_name, e
             )
             raise
+        finally:
+            self._release_conn(conn)
 
     # ------------------------------------------------------------------
     # Recommendation history
@@ -395,17 +453,22 @@ class RecommendationRepository:
                 (employee_id, target_grade_id, readiness_score, recommendation_date)
             VALUES (%s, %s, %s, NOW())
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor()
-            cursor.execute(query, (employee_id, target_grade_id, readiness_score))
-            self._conn.commit()
-            cursor.close()
-            logger.info(
-                "Recommendation saved for employee %s: target_grade=%s score=%s",
-                employee_id, target_grade_id, readiness_score,
-            )
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query, (employee_id, target_grade_id, readiness_score))
+                conn.commit()
+                logger.info(
+                    "Recommendation saved for employee %s: target_grade=%s score=%s",
+                    employee_id, target_grade_id, readiness_score,
+                )
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error(
                 "save_recommendation(%s) failed: %s", employee_id, e
             )
             raise
+        finally:
+            self._release_conn(conn)

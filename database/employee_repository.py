@@ -18,14 +18,27 @@ logger = logging.getLogger(__name__)
 class EmployeeRepository:
     """Repository for employee-related database operations."""
 
-    def __init__(self) -> None:
-        """Initialise the repository and borrow a connection from the pool."""
-        self._conn = get_connection()
+    def __init__(self, conn: Optional[mysql.connector.pooling.PooledMySQLConnection] = None) -> None:
+        """Initialise repository with an optional custom connection."""
+        self._custom_conn = conn
 
     def close(self) -> None:
-        """Return the connection back to the pool."""
-        if self._conn and self._conn.is_connected():
-            self._conn.close()
+        """Return the custom connection back to the pool if owned by this instance."""
+        if self._custom_conn and hasattr(self._custom_conn, "is_connected") and self._custom_conn.is_connected():
+            try:
+                self._custom_conn.close()
+            except Exception:
+                pass
+
+    def _get_conn(self):
+        return self._custom_conn or get_connection()
+
+    def _release_conn(self, conn) -> None:
+        if not self._custom_conn and conn and hasattr(conn, "close"):
+            try:
+                conn.close()
+            except Exception:
+                pass
 
     def get_employee(self, employee_id: int) -> Optional[dict]:
         """
@@ -56,15 +69,58 @@ class EmployeeRepository:
             JOIN grades tg ON e.target_grade_id  = tg.grade_id
             WHERE e.employee_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (employee_id,))
-            row = cursor.fetchone()
-            cursor.close()
-            return row
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (employee_id,))
+                row = cursor.fetchone()
+                return row
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_employee(%s) failed: %s", employee_id, e)
             raise
+        finally:
+            self._release_conn(conn)
+
+    def get_all_employees(self) -> list[dict]:
+        """
+        Fetch all employees with current and target grade names.
+        """
+        query = """
+            SELECT
+                e.employee_id,
+                e.employee_code,
+                e.full_name,
+                e.email,
+                e.department,
+                e.experience_years,
+                e.performance_rating,
+                e.joining_date,
+                cg.grade_name   AS current_grade,
+                cg.grade_id     AS current_grade_id,
+                tg.grade_name   AS target_grade,
+                tg.grade_id     AS target_grade_id
+            FROM employees e
+            JOIN grades cg ON e.current_grade_id = cg.grade_id
+            JOIN grades tg ON e.target_grade_id  = tg.grade_id
+            ORDER BY e.employee_id ASC
+        """
+        conn = self._get_conn()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
+        except mysql.connector.Error as e:
+            logger.error("get_all_employees failed: %s", e)
+            raise
+        finally:
+            self._release_conn(conn)
 
     def get_employee_skills(self, employee_id: int) -> list[dict]:
         """
@@ -85,15 +141,20 @@ class EmployeeRepository:
             JOIN skills s ON es.skill_id = s.skill_id
             WHERE es.employee_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (employee_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (employee_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_employee_skills(%s) failed: %s", employee_id, e)
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_employee_certifications(self, employee_id: int) -> list[dict]:
         """
@@ -116,15 +177,20 @@ class EmployeeRepository:
             JOIN certifications c ON ec.certification_id = c.certification_id
             WHERE ec.employee_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (employee_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (employee_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_employee_certifications(%s) failed: %s", employee_id, e)
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_employee_projects(self, employee_id: int) -> list[dict]:
         """
@@ -151,12 +217,17 @@ class EmployeeRepository:
             JOIN projects p ON ep.project_id = p.project_id
             WHERE ep.employee_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (employee_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (employee_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_employee_projects(%s) failed: %s", employee_id, e)
             raise
+        finally:
+            self._release_conn(conn)

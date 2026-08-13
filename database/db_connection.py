@@ -49,7 +49,9 @@ def get_connection() -> mysql.connector.pooling.PooledMySQLConnection:
         mysql.connector.Error: If a connection cannot be obtained.
     """
     try:
-        return get_pool().get_connection()
+        conn = get_pool().get_connection()
+        logger.debug("Borrowed connection from pool '%s'.", POOL_CONFIG["pool_name"])
+        return conn
     except mysql.connector.Error as e:
         logger.error("Failed to get connection from pool: %s", e)
         raise

@@ -48,12 +48,13 @@ class GapAnalysisService:
         """Release database connections back to the pool."""
         self._loader.close()
 
-    def run(self, employee_id: int) -> dict:
+    def run(self, employee_id: int, target_grade_id: Optional[int] = None) -> dict:
         """
-        Execute the full gap analysis for the given employee.
+        Execute the full gap analysis for the given employee against a target grade.
 
         Args:
             employee_id: The primary key of the employee to analyse.
+            target_grade_id: Optional target grade ID. Defaults to employee's target_grade_id.
 
         Returns:
             A dict containing employee details and all gap results.
@@ -66,13 +67,13 @@ class GapAnalysisService:
         if employee is None:
             raise EmployeeNotFoundError(f"Employee {employee_id} not found.")
 
-        requirement: Optional[GradeRequirement] = self._loader.load_grade_requirement(
-            employee.target_grade_id
-        )
+        target_id = target_grade_id if target_grade_id is not None else employee.target_grade_id
+        requirement: Optional[GradeRequirement] = self._loader.load_grade_requirement(target_id)
         if requirement is None:
             raise GradeNotFoundError(
-                f"Grade requirement for grade_id={employee.target_grade_id} not found."
+                f"Grade requirement for grade_id={target_id} not found."
             )
+
 
         skill_gaps = self._skill_svc.analyze(employee, requirement)
         cert_gaps = self._cert_svc.analyze(employee, requirement)

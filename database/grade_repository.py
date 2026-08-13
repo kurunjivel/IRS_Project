@@ -18,14 +18,27 @@ logger = logging.getLogger(__name__)
 class GradeRepository:
     """Repository for grade-requirement-related database operations."""
 
-    def __init__(self) -> None:
-        """Initialise the repository and borrow a connection from the pool."""
-        self._conn = get_connection()
+    def __init__(self, conn: Optional[mysql.connector.pooling.PooledMySQLConnection] = None) -> None:
+        """Initialise repository with an optional custom connection."""
+        self._custom_conn = conn
 
     def close(self) -> None:
-        """Return the connection back to the pool."""
-        if self._conn and self._conn.is_connected():
-            self._conn.close()
+        """Return the custom connection back to the pool if owned by this instance."""
+        if self._custom_conn and hasattr(self._custom_conn, "is_connected") and self._custom_conn.is_connected():
+            try:
+                self._custom_conn.close()
+            except Exception:
+                pass
+
+    def _get_conn(self):
+        return self._custom_conn or get_connection()
+
+    def _release_conn(self, conn) -> None:
+        if not self._custom_conn and conn and hasattr(conn, "close"):
+            try:
+                conn.close()
+            except Exception:
+                pass
 
     def get_grade(self, grade_id: int) -> Optional[dict]:
         """
@@ -42,15 +55,44 @@ class GradeRepository:
             FROM grades
             WHERE grade_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (grade_id,))
-            row = cursor.fetchone()
-            cursor.close()
-            return row
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (grade_id,))
+                row = cursor.fetchone()
+                return row
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_grade(%s) failed: %s", grade_id, e)
             raise
+        finally:
+            self._release_conn(conn)
+
+    def get_all_grades(self) -> list[dict]:
+        """
+        Fetch all available grades/roles.
+        """
+        query = """
+            SELECT grade_id, grade_name, description
+            FROM grades
+            ORDER BY grade_id ASC
+        """
+        conn = self._get_conn()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
+        except mysql.connector.Error as e:
+            logger.error("get_all_grades failed: %s", e)
+            raise
+        finally:
+            self._release_conn(conn)
 
     def get_grade_skills(self, grade_id: int) -> list[dict]:
         """
@@ -73,15 +115,20 @@ class GradeRepository:
             JOIN skills s ON gsr.skill_id = s.skill_id
             WHERE gsr.grade_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (grade_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (grade_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_grade_skills(%s) failed: %s", grade_id, e)
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_grade_certifications(self, grade_id: int) -> list[dict]:
         """
@@ -102,15 +149,20 @@ class GradeRepository:
             JOIN certifications c ON gcr.certification_id = c.certification_id
             WHERE gcr.grade_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (grade_id,))
-            rows = cursor.fetchall()
-            cursor.close()
-            return rows
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (grade_id,))
+                rows = cursor.fetchall()
+                return rows
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_grade_certifications(%s) failed: %s", grade_id, e)
             raise
+        finally:
+            self._release_conn(conn)
 
     def get_grade_project_requirement(self, grade_id: int) -> Optional[dict]:
         """
@@ -131,12 +183,17 @@ class GradeRepository:
             FROM grade_project_requirements
             WHERE grade_id = %s
         """
+        conn = self._get_conn()
         try:
-            cursor = self._conn.cursor(dictionary=True)
-            cursor.execute(query, (grade_id,))
-            row = cursor.fetchone()
-            cursor.close()
-            return row
+            cursor = conn.cursor(dictionary=True)
+            try:
+                cursor.execute(query, (grade_id,))
+                row = cursor.fetchone()
+                return row
+            finally:
+                cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_grade_project_requirement(%s) failed: %s", grade_id, e)
             raise
+        finally:
+            self._release_conn(conn)
