@@ -181,3 +181,67 @@ class CareerService:
         finally:
             gap_svc.close()
             self._recommendation_engine.close()
+
+    def get_mentor_matches(self, employee_id: int, limit: int = 5) -> dict:
+        """
+        Run Phase 8 automated peer & mentor matching.
+
+        Args:
+            employee_id: Unique positive integer employee ID.
+            limit: Maximum number of matches to return.
+
+        Returns:
+            Dict containing employee details, skill_gaps summary, and ranked mentor matches.
+        """
+        employee = self.get_employee(employee_id)
+        gap_svc = GapAnalysisService()
+        try:
+            gap_analysis = gap_svc.run(employee_id)
+            skill_gaps = gap_analysis.get("skill_gaps", [])
+
+            from services.mentor_matching_service import MentorMatchingService
+            matcher_svc = MentorMatchingService()
+            matches = matcher_svc.find_matches(employee, skill_gaps=skill_gaps, limit=limit)
+
+            return {
+                "employee_id": employee.employee_id,
+                "full_name": employee.full_name,
+                "current_grade": employee.current_grade,
+                "target_grade": employee.target_grade,
+                "department": employee.department,
+                "total_matches": len(matches),
+                "matches": [m.to_dict() for m in matches],
+            }
+        finally:
+            gap_svc.close()
+
+    def get_attrition_risk(self, employee_id: int) -> dict:
+        """
+        Run Phase 9 Flight-Risk Signal and Data-Readiness Evaluation for an employee.
+
+        Args:
+            employee_id: Unique positive integer employee ID.
+
+        Returns:
+            Dict containing flight risk level, probability, factors, and data readiness report.
+        """
+        gap_svc = GapAnalysisService()
+        try:
+            gap_analysis = gap_svc.run(employee_id)
+            from services.attrition_risk_service import AttritionRiskService
+            attrition_svc = AttritionRiskService()
+            result = attrition_svc.evaluate_employee_risk(employee_id, gap_analysis=gap_analysis)
+            return result.to_dict()
+        finally:
+            gap_svc.close()
+
+    def get_organizational_attrition_risk(self) -> dict:
+        """
+        Run Phase 9 Organizational Flight-Risk Evaluation for HR Dashboard.
+
+        Returns:
+            Dict containing total distribution summary and data readiness report.
+        """
+        from services.attrition_risk_service import AttritionRiskService
+        attrition_svc = AttritionRiskService()
+        return attrition_svc.get_organizational_risk_distribution()

@@ -6,7 +6,7 @@ Provides fallback standard seed users if DB is uninitialized or in test mode.
 """
 
 import logging
-from typing import Optional
+from typing import Optional, Any
 from database.db_connection import get_connection
 
 logger = logging.getLogger(__name__)
@@ -56,6 +56,22 @@ def _get_default_seed_users() -> list[dict]:
             "employee_id": 3,
             "is_active": 1,
         },
+        {
+            "user_id": 6,
+            "username": "manager",
+            "password_hash": hash_password("manager123"),
+            "role": "MANAGER",
+            "employee_id": 10,
+            "is_active": 1,
+        },
+        {
+            "user_id": 7,
+            "username": "manager2",
+            "password_hash": hash_password("manager123"),
+            "role": "MANAGER",
+            "employee_id": 20,
+            "is_active": 1,
+        },
     ]
 
 
@@ -82,7 +98,7 @@ def _init_mem_users():
 class UserRepository:
     """Repository for user authentication and authorization persistence."""
 
-    def __init__(self, conn: Optional[mysql.connector.pooling.PooledMySQLConnection] = None) -> None:
+    def __init__(self, conn: Optional[Any] = None) -> None:
         _init_mem_users()
         self._custom_conn = conn
 

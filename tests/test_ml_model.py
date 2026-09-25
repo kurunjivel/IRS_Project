@@ -378,7 +378,7 @@ class TestOutputSchema:
         assert result["model_name"] == predictor.model_name
 
     def test_no_extra_unexpected_keys(self, predictor, sample_feature_row):
-        result = predictor.predict(sample_feature_row)
+        result = predictor.predict(sample_feature_row, explain=False)
         assert set(result.keys()) == self.REQUIRED_KEYS
 
     def test_default_employee_id_is_zero(self, predictor, sample_feature_row):

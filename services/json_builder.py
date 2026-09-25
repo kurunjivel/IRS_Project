@@ -29,6 +29,32 @@ class JsonBuilder:
         employee: Employee = analysis["employee"]
         requirement: GradeRequirement = analysis["requirement"]
 
+        skill_gaps_built = self._build_skill_gaps(analysis["skill_gaps"])
+        cert_gaps_built = self._build_cert_gaps(analysis["certification_gaps"])
+        exp_built = self._build_experience_gap(analysis["experience_gap"])
+        proj_built = self._build_project_gap(analysis["project_gap"])
+
+        emp_skills = [
+            {
+                "skill_id": getattr(s, "skill_id", 0),
+                "skill_name": getattr(s, "skill_name", ""),
+                "skill_level": getattr(s, "skill_level", 0),
+                "last_used_date": s.last_used_date.isoformat() if hasattr(getattr(s, "last_used_date", None), 'isoformat') else str(getattr(s, "last_used_date", "")),
+            }
+            for s in getattr(employee, "skills", [])
+        ]
+
+        gap_dict = {
+            "skills": skill_gaps_built,
+            "certifications": cert_gaps_built,
+            "experience": exp_built,
+            "projects": proj_built,
+            "skill_gaps": skill_gaps_built,
+            "certification_gaps": cert_gaps_built,
+            "experience_gap": exp_built,
+            "project_gap": proj_built,
+        }
+
         report = {
             "employee": {
                 "employee_id": employee.employee_id,
@@ -41,13 +67,14 @@ class JsonBuilder:
                 "joining_date": employee.joining_date,
                 "current_grade": employee.current_grade,
                 "target_grade": employee.target_grade,
+                "skills": emp_skills,
             },
-            "gapAnalysis": {
-                "skills": self._build_skill_gaps(analysis["skill_gaps"]),
-                "certifications": self._build_cert_gaps(analysis["certification_gaps"]),
-                "experience": self._build_experience_gap(analysis["experience_gap"]),
-                "projects": self._build_project_gap(analysis["project_gap"]),
-            },
+            "gapAnalysis": gap_dict,
+            "gap_analysis": gap_dict,
+            "skill_gaps": skill_gaps_built,
+            "certification_gaps": cert_gaps_built,
+            "experience_gap": exp_built,
+            "project_gap": proj_built,
         }
 
         logger.info("JSON report built for employee %s.", employee.employee_id)

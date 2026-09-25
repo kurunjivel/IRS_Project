@@ -77,9 +77,13 @@ class DataLoader:
                 skill_name=row["skill_name"],
                 category=row["category"],
                 skill_level=int(row["skill_level"]),
+                last_used_date=str(row["last_used_date"]) if row.get("last_used_date") else None,
             )
             for row in self._emp_repo.get_employee_skills(employee_id)
         ]
+
+        from services.skill_decay_service import SkillDecayService
+        SkillDecayService().apply_decay_to_employee(employee)
 
         employee.certifications = [
             EmployeeCertification(

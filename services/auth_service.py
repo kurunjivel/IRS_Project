@@ -172,8 +172,8 @@ class AuthService:
             raise ValueError("Password must be at least 4 characters long")
 
         role_upper = role.upper()
-        if role_upper not in ("EMPLOYEE", "HR"):
-            raise ValueError("Role must be either EMPLOYEE or HR")
+        if role_upper not in ("EMPLOYEE", "HR", "MANAGER"):
+            raise ValueError("Role must be EMPLOYEE, HR, or MANAGER")
 
         # Check if username already exists
         existing = self._user_repo.get_user_by_username(clean_username)

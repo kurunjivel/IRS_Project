@@ -13,6 +13,10 @@ import {
   LogOut,
   Menu,
   X,
+  Sliders,
+  Users,
+  ShieldCheck,
+  FileText,
   Sparkles,
 } from 'lucide-react';
 
@@ -33,6 +37,10 @@ export const EmployeeLayout = () => {
     { label: 'Career Analysis', path: '/employee/career-analysis', icon: LineChart },
     { label: 'Skill Gaps', path: '/employee/skills', icon: Target },
     { label: 'Recommendations', path: '/employee/recommendations', icon: Lightbulb },
+    { label: 'Mentor Network', path: '/employee/mentors', icon: Users },
+    { label: 'Career Stability', path: '/employee/stability', icon: ShieldCheck },
+    { label: 'Resume Parser', path: '/employee/resume', icon: FileText },
+    { label: 'What-If Simulator', path: '/employee/simulator', icon: Sliders },
     { label: 'Career Roadmap', path: '/employee/roadmap', icon: Map },
     { label: 'My Progress', path: '/employee/progress', icon: TrendingUp },
     { label: 'Promotion Status', path: '/employee/promotion', icon: Award },

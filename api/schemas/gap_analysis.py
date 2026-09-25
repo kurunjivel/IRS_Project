@@ -13,9 +13,13 @@ class SkillGapSchema(BaseModel):
     skill: str = Field(..., description="Skill name")
     category: str = Field(..., description="Skill category")
     current_level: int = Field(..., description="Current skill level of employee")
+    effective_level: Optional[float] = Field(None, description="Effective skill level after recency decay")
     required_level: int = Field(..., description="Required skill level for target grade")
-    gap: int = Field(..., description="Deficit level (required - current)")
+    gap: float = Field(..., description="Deficit level (required - effective or current)")
     mandatory: bool = Field(..., description="Whether skill is mandatory for target grade")
+    recency_factor: Optional[float] = Field(None, description="Recency decay factor")
+    last_used_date: Optional[str] = Field(None, description="Date skill was last used")
+    freshness_status: Optional[str] = Field(None, description="Freshness status (Active, Needs Refresh, Stale)")
 
 
 class CertificationGapSchema(BaseModel):

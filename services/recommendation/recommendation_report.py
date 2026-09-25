@@ -177,9 +177,22 @@ class RecommendationReportBuilder:
             "experience_years":   employee.experience_years,
             "performance_rating": employee.performance_rating,
             "joining_date":       employee.joining_date,
+            "skills": [
+                {
+                    "skill_id": getattr(s, "skill_id", 0),
+                    "skill_name": getattr(s, "skill_name", ""),
+                    "skill_level": getattr(s, "skill_level", 0),
+                    "last_used_date": s.last_used_date.isoformat() if hasattr(getattr(s, "last_used_date", None), 'isoformat') else str(getattr(s, "last_used_date", "")),
+                }
+                for s in getattr(employee, "skills", [])
+            ],
         }
 
         gap_dict = {
+            "skills":              gap_analysis.get("skill_gaps", []),
+            "certifications":      gap_analysis.get("certification_gaps", []),
+            "experience":          gap_analysis.get("experience_gap", {}),
+            "projects":            gap_analysis.get("project_gap", {}),
             "skill_gaps":          gap_analysis.get("skill_gaps", []),
             "certification_gaps":  gap_analysis.get("certification_gaps", []),
             "experience_gap":      gap_analysis.get("experience_gap", {}),
@@ -200,6 +213,7 @@ class RecommendationReportBuilder:
             "promotion_probability": prediction.get("promotion_probability", 0.0),
             "prediction":            prediction.get("prediction", ""),
             "model_name":            prediction.get("model_name", ""),
+            "shap_analysis":         prediction.get("shap_analysis"),
         }
 
         report = RecommendationReport(

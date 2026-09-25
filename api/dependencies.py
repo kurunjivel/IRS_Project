@@ -89,3 +89,21 @@ def require_employee(current_user: dict = None) -> dict:
             detail="Forbidden: Employee access required",
         )
     return current_user
+
+
+def require_manager(current_user: dict = None) -> dict:
+    """
+    Dependency that restricts endpoint access to MANAGER role only.
+
+    Raises:
+        HTTPException(403): If user role is not MANAGER.
+    """
+    if not current_user or current_user.get("role") != "MANAGER":
+        logger.warning("Forbidden non-manager access attempt by user %s (role=%s)",
+                       current_user.get("username") if current_user else "unknown",
+                       current_user.get("role") if current_user else "none")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: Manager access required",
+        )
+    return current_user

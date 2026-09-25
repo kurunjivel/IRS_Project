@@ -87,11 +87,13 @@ export const Login = () => {
       const userPayload = await login(username, password);
       const from = location.state?.from?.pathname;
 
-      if (userPayload.role === 'HR') {
-        navigate(from && from.startsWith('/hr') ? from : '/hr');
-      } else {
-        navigate(from && from.startsWith('/employee') ? from : '/employee');
-      }
+        if (userPayload.role === 'HR') {
+          navigate(from && from.startsWith('/hr') ? from : '/hr');
+        } else if (userPayload.role === 'MANAGER') {
+          navigate(from && from.startsWith('/manager') ? from : '/manager');
+        } else {
+          navigate(from && from.startsWith('/employee') ? from : '/employee');
+        }
     } catch (err) {
       setLoginError(err.message || 'Login failed. Please verify credentials.');
     } finally {
@@ -137,6 +139,8 @@ export const Login = () => {
         const from = location.state?.from?.pathname;
         if (userPayload.role === 'HR') {
           navigate(from && from.startsWith('/hr') ? from : '/hr');
+        } else if (userPayload.role === 'MANAGER') {
+          navigate(from && from.startsWith('/manager') ? from : '/manager');
         } else {
           navigate(from && from.startsWith('/employee') ? from : '/employee');
         }

@@ -71,6 +71,48 @@ export const PromotionProbability = ({ prediction }) => {
         </p>
       </div>
 
+      {/* SHAP Explainability Section */}
+      {prediction.shap_analysis && (
+        <div className="pt-4 border-t border-slate-800 space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+              <span>SHAP Feature Impact Analysis</span>
+            </h4>
+            <span className="text-[10px] text-slate-400 font-semibold bg-slate-800 px-2 py-0.5 rounded">Explainable AI</span>
+          </div>
+
+          {prediction.shap_analysis.summary && (
+            <p className="text-[11px] text-slate-400 italic leading-snug">
+              "{prediction.shap_analysis.summary}"
+            </p>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            {/* Positive Factors */}
+            {prediction.shap_analysis.positive_factors?.slice(0, 3).map((f, i) => (
+              <div key={`pos-${i}`} className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-300 flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-slate-200">{f.feature_label}</p>
+                  <p className="text-[10px] text-emerald-400/80">{f.explanation}</p>
+                </div>
+                <span className="font-bold text-emerald-400 ml-2">+{f.shap_value}</span>
+              </div>
+            ))}
+            {/* Negative Factors */}
+            {prediction.shap_analysis.negative_factors?.slice(0, 3).map((f, i) => (
+              <div key={`neg-${i}`} className="p-2.5 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-300 flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-slate-200">{f.feature_label}</p>
+                  <p className="text-[10px] text-rose-400/80">{f.explanation}</p>
+                </div>
+                <span className="font-bold text-rose-400 ml-2">{f.shap_value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Model Name Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-[11px] text-slate-400">
         <div className="flex items-center gap-1.5 text-slate-400">

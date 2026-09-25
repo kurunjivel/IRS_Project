@@ -79,15 +79,15 @@ class SkillScoreService:
                 earned += points_per_skill
             else:
                 gap = gap_map[key]
-                current = gap["current_level"]
+                current = gap.get("effective_level", gap["current_level"])
                 required = gap["required_level"]
 
                 if current == 0:
                     # Skill is entirely missing.
                     missing_skills.append(req.skill_name)
                 else:
-                    # Partial credit: proportional to level achieved.
-                    earned += points_per_skill * (current / required)
+                    # Partial credit: proportional to effective level achieved.
+                    earned += points_per_skill * min(1.0, current / required)
 
         score = round(earned, 2)
         percentage = round((score / SKILL_MAX_SCORE) * 100, 2)

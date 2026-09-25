@@ -130,19 +130,20 @@ class EmployeeRepository:
             employee_id: The primary key of the employee.
 
         Returns:
-            List of dicts with skill_name and skill_level.
-        """
-        query = """
-            SELECT
-                s.skill_name,
-                s.category,
-                es.skill_level
-            FROM employee_skills es
-            JOIN skills s ON es.skill_id = s.skill_id
-            WHERE es.employee_id = %s
+            List of dicts with skill_name, category, skill_level, and last_used_date.
         """
         conn = self._get_conn()
         try:
+            query = """
+                SELECT
+                    s.skill_name,
+                    s.category,
+                    es.skill_level,
+                    es.last_used_date
+                FROM employee_skills es
+                JOIN skills s ON es.skill_id = s.skill_id
+                WHERE es.employee_id = %s
+            """
             cursor = conn.cursor(dictionary=True)
             try:
                 cursor.execute(query, (employee_id,))
@@ -151,8 +152,29 @@ class EmployeeRepository:
             finally:
                 cursor.close()
         except mysql.connector.Error as e:
-            logger.error("get_employee_skills(%s) failed: %s", employee_id, e)
-            raise
+            logger.debug("get_employee_skills with last_used_date failed, trying fallback: %s", e)
+            query_fallback = """
+                SELECT
+                    s.skill_name,
+                    s.category,
+                    es.skill_level
+                FROM employee_skills es
+                JOIN skills s ON es.skill_id = s.skill_id
+                WHERE es.employee_id = %s
+            """
+            try:
+                cursor = conn.cursor(dictionary=True)
+                try:
+                    cursor.execute(query_fallback, (employee_id,))
+                    rows = cursor.fetchall()
+                    for r in rows:
+                        r["last_used_date"] = None
+                    return rows
+                finally:
+                    cursor.close()
+            except mysql.connector.Error as err:
+                logger.error("get_employee_skills(%s) failed: %s", employee_id, err)
+                raise
         finally:
             self._release_conn(conn)
 
@@ -228,6 +250,94 @@ class EmployeeRepository:
                 cursor.close()
         except mysql.connector.Error as e:
             logger.error("get_employee_projects(%s) failed: %s", employee_id, e)
+            raise
+        finally:
+            self._release_conn(conn)
+
+    def update_employee_profile_data(
+        self,
+        employee_id: int,
+        confirmed_skills: list[dict],
+        confirmed_certs: list[dict],
+        confirmed_projects: list[dict],
+    ) -> bool:
+        """
+        Upsert confirmed resume skills, certifications, and projects into the database.
+        """
+        conn = self._get_conn()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            try:
+                # 1. Update/insert skills
+                for sk in confirmed_skills:
+                    s_name = sk["skill_name"]
+                    s_lvl = sk.get("suggested_level", sk.get("current_level", 3))
+                    s_cat = sk.get("category", "General")
+
+                    # Find or insert skill_id in skills table
+                    cursor.execute("SELECT skill_id FROM skills WHERE LOWER(skill_name) = LOWER(%s)", (s_name,))
+                    row = cursor.fetchone()
+                    if row:
+                        skill_id = row["skill_id"]
+                    else:
+                        cursor.execute("INSERT INTO skills (skill_name, category) VALUES (%s, %s)", (s_name, s_cat))
+                        skill_id = cursor.lastrowid
+
+                    # Upsert into employee_skills
+                    cursor.execute(
+                        """
+                        INSERT INTO employee_skills (employee_id, skill_id, skill_level)
+                        VALUES (%s, %s, %s)
+                        ON DUPLICATE KEY UPDATE skill_level = GREATEST(skill_level, VALUES(skill_level))
+                        """,
+                        (employee_id, skill_id, s_lvl),
+                    )
+
+                # 2. Insert certifications
+                for cert in confirmed_certs:
+                    c_name = cert["certification_name"]
+                    cursor.execute("SELECT certification_id FROM certifications WHERE LOWER(certification_name) = LOWER(%s)", (c_name,))
+                    row = cursor.fetchone()
+                    if row:
+                        cert_id = row["certification_id"]
+                    else:
+                        cursor.execute("INSERT INTO certifications (certification_name, provider) VALUES (%s, %s)", (c_name, "Industry Certification"))
+                        cert_id = cursor.lastrowid
+
+                    cursor.execute(
+                        """
+                        INSERT IGNORE INTO employee_certifications (employee_id, certification_id, status, completion_date)
+                        VALUES (%s, %s, %s, NOW())
+                        """,
+                        (employee_id, cert_id, cert.get("status", "Completed")),
+                    )
+
+                # 3. Insert projects
+                for proj in confirmed_projects:
+                    p_name = proj["project_name"]
+                    cursor.execute("SELECT project_id FROM projects WHERE LOWER(project_name) = LOWER(%s)", (p_name,))
+                    row = cursor.fetchone()
+                    if row:
+                        proj_id = row["project_id"]
+                    else:
+                        cursor.execute("INSERT INTO projects (project_name, technology, difficulty, domain) VALUES (%s, %s, %s, %s)", (p_name, "Extracted Tech", "Intermediate", "Engineering"))
+                        proj_id = cursor.lastrowid
+
+                    cursor.execute(
+                        """
+                        INSERT IGNORE INTO employee_projects (employee_id, project_id, role, lead_project, duration_months, project_rating)
+                        VALUES (%s, %s, %s, FALSE, 6, 4.0)
+                        """,
+                        (employee_id, proj_id, proj.get("role_description", "Team Member")),
+                    )
+
+                conn.commit()
+                return True
+            finally:
+                cursor.close()
+        except mysql.connector.Error as e:
+            logger.error("update_employee_profile_data(%s) failed: %s", employee_id, e)
+            conn.rollback()
             raise
         finally:
             self._release_conn(conn)

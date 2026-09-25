@@ -12,6 +12,9 @@ class EmployeeSkillSchema(BaseModel):
     skill_name: str = Field(..., description="Name of the skill")
     category: str = Field(..., description="Skill category")
     skill_level: int = Field(..., ge=1, le=5, description="Proficiency level (1-5)")
+    last_used_date: Optional[str] = Field(None, description="Date skill was last active/used")
+    recency_factor: float = Field(1.0, ge=0.0, le=1.0, description="Recency decay factor (0.3-1.0)")
+    effective_skill_level: float = Field(0.0, ge=0.0, le=5.0, description="Effective skill level after recency decay")
 
 
 class EmployeeCertificationSchema(BaseModel):

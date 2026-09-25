@@ -12,6 +12,7 @@ import {
   X,
   ShieldCheck,
   SlidersHorizontal,
+  Grid,
 } from 'lucide-react';
 
 export const HRLayout = () => {
@@ -28,6 +29,7 @@ export const HRLayout = () => {
   const navItems = [
     { label: 'Talent Dashboard', path: '/hr', icon: BarChart3 },
     { label: 'Role Fit Analysis', path: '/hr/roles', icon: Target },
+    { label: '9-Box Succession Matrix', path: '/hr/succession', icon: Grid },
     { label: 'All Employees', path: '/hr/employees', icon: Users },
     { label: 'Grade Requirements', path: '/hr/requirements', icon: FileCheck },
     { label: 'Talent Analytics', path: '/hr/analytics', icon: SlidersHorizontal },

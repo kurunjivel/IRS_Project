@@ -48,6 +48,40 @@ class GapAnalysisService:
         """Release database connections back to the pool."""
         self._loader.close()
 
+    def analyze_employee_object(self, employee: Employee, target_grade_id: Optional[int] = None) -> dict:
+        """
+        Execute gap analysis for a given Employee model object in memory.
+
+        Args:
+            employee: Pre-loaded or simulated Employee instance.
+            target_grade_id: Optional target grade ID. Defaults to employee's target_grade_id.
+
+        Returns:
+            A dict containing employee details and all gap results.
+        """
+        target_id = target_grade_id if target_grade_id is not None else employee.target_grade_id
+        requirement: Optional[GradeRequirement] = self._loader.load_grade_requirement(target_id)
+        if requirement is None:
+            raise GradeNotFoundError(
+                f"Grade requirement for grade_id={target_id} not found."
+            )
+
+        skill_gaps = self._skill_svc.analyze(employee, requirement)
+        cert_gaps = self._cert_svc.analyze(employee, requirement)
+        exp_gap = self._exp_svc.analyze(employee, requirement)
+        proj_gap = self._proj_svc.analyze(employee, requirement)
+
+        logger.info("Gap analysis complete for employee object %s.", employee.employee_id)
+
+        return {
+            "employee": employee,
+            "requirement": requirement,
+            "skill_gaps": skill_gaps,
+            "certification_gaps": cert_gaps,
+            "experience_gap": exp_gap,
+            "project_gap": proj_gap,
+        }
+
     def run(self, employee_id: int, target_grade_id: Optional[int] = None) -> dict:
         """
         Execute the full gap analysis for the given employee against a target grade.
@@ -67,26 +101,4 @@ class GapAnalysisService:
         if employee is None:
             raise EmployeeNotFoundError(f"Employee {employee_id} not found.")
 
-        target_id = target_grade_id if target_grade_id is not None else employee.target_grade_id
-        requirement: Optional[GradeRequirement] = self._loader.load_grade_requirement(target_id)
-        if requirement is None:
-            raise GradeNotFoundError(
-                f"Grade requirement for grade_id={target_id} not found."
-            )
-
-
-        skill_gaps = self._skill_svc.analyze(employee, requirement)
-        cert_gaps = self._cert_svc.analyze(employee, requirement)
-        exp_gap = self._exp_svc.analyze(employee, requirement)
-        proj_gap = self._proj_svc.analyze(employee, requirement)
-
-        logger.info("Gap analysis complete for employee %s.", employee_id)
-
-        return {
-            "employee": employee,
-            "requirement": requirement,
-            "skill_gaps": skill_gaps,
-            "certification_gaps": cert_gaps,
-            "experience_gap": exp_gap,
-            "project_gap": proj_gap,
-        }
+        return self.analyze_employee_object(employee, target_grade_id)

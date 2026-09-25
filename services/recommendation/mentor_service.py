@@ -61,7 +61,36 @@ class MentorService:
         Returns:
             Ordered list of RecommendationItems (up to _MAX_MENTORS).
         """
-        # Combine and deduplicate by mentor_id
+        # Attempt Phase 8 Intelligent Mentor Matching Network first
+        try:
+            from services.mentor_matching_service import MentorMatchingService
+            matcher = MentorMatchingService()
+            phase8_matches = matcher.find_matches(employee, skill_gaps=skill_gaps, limit=_MAX_MENTORS)
+
+            if phase8_matches:
+                recommendations: list[RecommendationItem] = []
+                for m in phase8_matches:
+                    prio = Priority.HIGH if m.match_score >= 75.0 else Priority.MEDIUM
+                    type_str = "Mentor" if m.match_type == "MENTOR" else "Peer Learning Partner"
+                    reasons_summary = "; ".join(m.match_reasons[:2])
+
+                    recommendations.append(RecommendationItem(
+                        type=RecommendationType.MENTORSHIP,
+                        title=f"Connect with {type_str}: {m.full_name} ({m.match_score:.0f}% Match)",
+                        reason=f"Recommended {type_str.lower()} ({reasons_summary}). Can assist with your target role progression to {employee.target_grade}.",
+                        priority=prio,
+                        provider=m.department,
+                        duration="Ongoing",
+                        impact=f"{m.match_level} fit: {len(m.covered_gaps)} skill gap(s) covered",
+                        metadata=m.to_dict(),
+                    ))
+
+                if recommendations:
+                    return recommendations
+        except Exception as err:
+            logger.warning("Phase 8 MentorMatchingService fallback in MentorService: %s", err)
+
+        # Fallback to standard DB mentor query
         all_mentors: dict[int, dict] = {}
         for m in grade_mentors + skill_mentors:
             mid = m.get("mentor_id")

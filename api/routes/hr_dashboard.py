@@ -52,18 +52,23 @@ def list_roles(current_user: dict = Depends(get_current_user)):
         repo.close()
 
 
+from database.manager_repository import ManagerRepository
+
+
 @router.get(
     "/roles/{role_id}/candidates",
     status_code=status.HTTP_200_OK,
     summary="Analyze and rank candidate employees for a target role/grade",
-    description="Runs Role Fit analysis for all eligible employees against selected target role and ranks them by Role Fit Score.",
+    description="Runs Role Fit analysis for all eligible employees against selected target role. Highlights candidates approved by direct managers.",
 )
 def get_role_candidates(
     role_id: int = Path(..., ge=1, description="Target Grade/Role ID"),
+    approved_only: bool = False,
     current_user: dict = Depends(get_current_user),
 ):
     require_hr(current_user)
     grade_repo = GradeRepository()
+    mgr_repo = ManagerRepository()
     try:
         target_grade = grade_repo.get_grade(role_id)
         if not target_grade:
@@ -75,8 +80,11 @@ def get_role_candidates(
         role_fit_svc = RoleFitService()
         candidates = role_fit_svc.get_candidates_for_role(role_id)
 
-        formatted_candidates = [
-            {
+        formatted_candidates = []
+        for c in candidates:
+            rev = mgr_repo.get_review(c.employee_id, quarter="Q3-2026")
+            rev_status = rev["status"] if rev else "PENDING"
+            cand_dict = {
                 "employee_id": c.employee_id,
                 "name": c.name,
                 "current_grade": c.current_grade,
@@ -87,9 +95,13 @@ def get_role_candidates(
                 "eligibility": c.eligibility,
                 "status": c.status,
                 "breakdown": c.breakdown,
+                "manager_review_status": rev_status,
+                "manager_approved": (rev_status == "APPROVED"),
             }
-            for c in candidates
-        ]
+            formatted_candidates.append(cand_dict)
+
+        if approved_only:
+            formatted_candidates = [c for c in formatted_candidates if c["manager_approved"]]
 
         return {
             "target_role_id": role_id,
@@ -100,6 +112,7 @@ def get_role_candidates(
         }
     finally:
         grade_repo.close()
+        mgr_repo.close()
 
 
 @router.get(
@@ -164,3 +177,34 @@ def get_hr_analytics(current_user: dict = Depends(get_current_user)):
     finally:
         emp_repo.close()
         grade_repo.close()
+
+
+from services.succession_service import SuccessionService
+from api.schemas.succession import NineBoxMatrixResponse
+
+
+@router.get(
+    "/succession/nine-box",
+    status_code=status.HTTP_200_OK,
+    response_model=NineBoxMatrixResponse,
+    summary="Get HR 9-Box Succession Planning Matrix",
+    description="Maps employees onto 3x3 Performance vs Readiness grid with pipeline indicators and filter options.",
+)
+def get_nine_box_matrix(
+    department: Optional[str] = None,
+    current_grade: Optional[str] = None,
+    target_grade: Optional[str] = None,
+    manager_id: Optional[int] = None,
+    current_user: dict = Depends(get_current_user),
+):
+    require_hr(current_user)
+    svc = SuccessionService()
+    try:
+        return svc.get_nine_box_matrix(
+            department=department,
+            current_grade=current_grade,
+            target_grade=target_grade,
+            manager_id=manager_id,
+        )
+    finally:
+        svc.close()

@@ -26,6 +26,11 @@ from api.routes import (
     auth_router,
     employee_portal_router,
     hr_dashboard_router,
+    simulation_router,
+    manager_portal_router,
+    mentor_matching_router,
+    attrition_risk_router,
+    resume_router,
 )
 
 # Configure logging
@@ -160,6 +165,11 @@ app.include_router(readiness_router)
 app.include_router(prediction_router)
 app.include_router(recommendations_router)
 app.include_router(career_analysis_router)
+app.include_router(simulation_router)
+app.include_router(manager_portal_router)
+app.include_router(mentor_matching_router)
+app.include_router(attrition_risk_router)
+app.include_router(resume_router)
 
 
 # ---------------------------------------------------------------------------

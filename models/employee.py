@@ -16,6 +16,13 @@ class EmployeeSkill:
     skill_name: str
     category: str
     skill_level: int
+    last_used_date: Optional[str] = None
+    recency_factor: float = 1.0
+    effective_skill_level: float = 0.0
+
+    def __post_init__(self):
+        if self.effective_skill_level == 0.0 and self.skill_level > 0:
+            self.effective_skill_level = round(self.skill_level * self.recency_factor, 2)
 
 
 @dataclass
@@ -78,6 +85,7 @@ class Employee:
     current_grade_id: int
     target_grade: str
     target_grade_id: int
+    manager_id: Optional[int] = None
     skills: list[EmployeeSkill] = field(default_factory=list)
     certifications: list[EmployeeCertification] = field(default_factory=list)
     projects: list[EmployeeProject] = field(default_factory=list)

@@ -121,3 +121,15 @@ def get_my_promotion_status(current_user: dict = Depends(get_current_user)):
     service = CareerService()
     analysis = service.get_career_analysis(emp_id)
     return build_employee_promotion_status(analysis)
+
+
+@router.get(
+    "/me/mentors",
+    status_code=status.HTTP_200_OK,
+    summary="Get my automated peer & mentor matches",
+)
+def get_my_mentor_matches(current_user: dict = Depends(get_current_user)):
+    user = require_employee(current_user)
+    emp_id = user["employee_id"]
+    service = CareerService()
+    return service.get_mentor_matches(emp_id)

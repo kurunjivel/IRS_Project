@@ -66,6 +66,9 @@ export const HRRoleFitView = () => {
     } catch (err) {
       console.error('Failed to fetch candidate promotion status:', err);
     }
+    setTimeout(() => {
+      document.getElementById('candidate-inspection-card')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   if (loadingRoles) {
@@ -229,7 +232,13 @@ export const HRRoleFitView = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="px-3 py-1 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 rounded-lg font-semibold text-[11px] transition-colors">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectCandidate(cand);
+                        }}
+                        className="px-3 py-1 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 rounded-lg font-semibold text-[11px] transition-colors"
+                      >
                         Inspect
                       </button>
                     </td>
@@ -243,7 +252,7 @@ export const HRRoleFitView = () => {
 
       {/* Selected Candidate Detailed Inspection Card */}
       {selectedCandidate && (
-        <div className="bg-slate-900 border border-purple-500/30 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div id="candidate-inspection-card" className="bg-slate-900 border border-purple-500/30 rounded-3xl p-6 shadow-2xl space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
             <div>
               <div className="inline-block px-2.5 py-0.5 bg-purple-500/20 text-purple-300 text-[10px] font-bold rounded-md mb-1">

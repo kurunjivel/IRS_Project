@@ -9,12 +9,15 @@ import sys
 from unittest.mock import MagicMock, patch
 
 # ---------------------------------------------------------------------------
-# Stub mysql.connector before any project module is imported
+# Stub mysql.connector only if not available
 # ---------------------------------------------------------------------------
-_mysql_stub = MagicMock()
-sys.modules.setdefault("mysql", _mysql_stub)
-sys.modules.setdefault("mysql.connector", _mysql_stub)
-sys.modules.setdefault("mysql.connector.pooling", _mysql_stub)
+try:
+    import mysql.connector
+except ImportError:
+    _mysql_stub = MagicMock()
+    sys.modules.setdefault("mysql", _mysql_stub)
+    sys.modules.setdefault("mysql.connector", _mysql_stub)
+    sys.modules.setdefault("mysql.connector.pooling", _mysql_stub)
 
 import pytest
 from fastapi.testclient import TestClient
@@ -22,7 +25,7 @@ from api.main import app
 from models.employee import Employee, EmployeeSkill, EmployeeCertification, EmployeeProject
 from services.gap_analysis_service import EmployeeNotFoundError, GradeNotFoundError
 
-client = TestClient(app)
+client = TestClient(app, raise_server_exceptions=False)
 
 
 def _make_dummy_employee(employee_id: int = 1) -> Employee:

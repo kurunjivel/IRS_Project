@@ -6,3 +6,5 @@ export const getRoleCandidates = (roleId) => api.get(`/hr/roles/${roleId}/candid
 export const getHREmployeeCareerAnalysis = (empId) => api.get(`/hr/employees/${empId}/career-analysis`);
 export const getHREmployeePromotionStatus = (empId) => api.get(`/hr/employees/${empId}/promotion-status`);
 export const getHRAnalytics = () => api.get('/hr/analytics');
+export const getNineBoxMatrix = (params) => api.get('/hr/succession/nine-box', { params });
+export const getOrganizationalAttritionRisk = () => api.get('/hr/analytics/attrition-distribution');

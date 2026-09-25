@@ -86,6 +86,7 @@ class Predictor:
         employee_id: int = 0,
         current_grade: str = "",
         target_grade: str = "",
+        explain: bool = True,
     ) -> dict:
         """
         Predict promotion likelihood for a single employee.
@@ -96,6 +97,7 @@ class Predictor:
             employee_id:   Employee identifier (for traceability).
             current_grade: Current grade string, e.g. "G2".
             target_grade:  Target grade string, e.g. "G3".
+            explain:       Whether to compute SHAP feature explanations.
 
         Returns:
             Prediction dict with the required output schema.
@@ -111,6 +113,15 @@ class Predictor:
         proba = float(pipeline.predict_proba(X)[0, 1])
         label = LABEL_POSITIVE if proba >= self._threshold else LABEL_NEGATIVE
 
+        shap_analysis = None
+        if explain:
+            try:
+                from services.ml.shap_explainability_service import ShapExplainabilityService
+                shap_svc = ShapExplainabilityService()
+                shap_analysis = shap_svc.explain(pipeline, X, self.feature_columns)
+            except Exception as e:
+                logger.warning("SHAP explanation calculation failed: %s", e)
+
         result = {
             "employee_id": int(employee_id),
             "current_grade": str(current_grade),
@@ -119,6 +130,8 @@ class Predictor:
             "prediction": label,
             "model_name": self.model_name,
         }
+        if explain and shap_analysis is not None:
+            result["shap_analysis"] = shap_analysis
         logger.debug(
             "Prediction for employee %d: %s (p=%.4f)",
             employee_id, label, proba,

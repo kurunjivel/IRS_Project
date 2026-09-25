@@ -17,10 +17,11 @@ export const EmployeeSkillGapsView = () => {
     return <div className="p-8 text-center text-slate-400">Loading skill gap analysis...</div>;
   }
 
-  const skillList = gaps?.skills || gaps?.skill_gaps || [];
-  const certList = gaps?.certifications || gaps?.certification_gaps || [];
-  const exp = gaps?.experience || gaps?.experience_gap || {};
-  const proj = gaps?.projects || gaps?.project_gap || {};
+  const gapData = gaps?.gapAnalysis || gaps?.gap_analysis || gaps || {};
+  const skillList = gapData.skills || gapData.skill_gaps || gaps?.skills || gaps?.skill_gaps || [];
+  const certList = gapData.certifications || gapData.certification_gaps || gaps?.certifications || gaps?.certification_gaps || [];
+  const exp = gapData.experience || gapData.experience_gap || gaps?.experience || gaps?.experience_gap || {};
+  const proj = gapData.projects || gapData.project_gap || gaps?.projects || gaps?.project_gap || {};
 
   return (
     <div className="space-y-6">
@@ -36,32 +37,56 @@ export const EmployeeSkillGapsView = () => {
           Technical Skill Requirements
         </h2>
         <div className="space-y-3">
-          {skillList.map((s, idx) => (
-            <div key={idx} className="p-4 bg-slate-950 border border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold text-slate-200">{s.skill || s.skill_name}</p>
-                <p className="text-[11px] text-slate-400">
-                  Category: {s.category || 'Core'} • {s.mandatory ? 'Mandatory Requirement' : 'Optional'}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="text-[11px] font-semibold text-slate-400">
-                    Current: Level {s.current_level} / Required: Level {s.required_level}
+          {skillList.map((s, idx) => {
+            const freshness = s.freshness_status || (s.recency_factor >= 0.9 ? 'Active' : s.recency_factor >= 0.65 ? 'Needs Refresh' : 'Stale');
+            const freshnessBg = freshness === 'Active' 
+              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+              : freshness === 'Needs Refresh' 
+              ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' 
+              : 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+
+            return (
+              <div key={idx} className="p-4 bg-slate-950 border border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-xs font-bold text-slate-200">{s.skill || s.skill_name}</p>
+                    {s.recency_factor !== undefined && (
+                      <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${freshnessBg}`}>
+                        {freshness} ({(s.recency_factor * 100).toFixed(0)}% Fresh)
+                      </span>
+                    )}
+                    {s.match_type && s.match_type !== 'EXACT_MATCH' && s.matched_employee_skill && (
+                      <span className="px-2 py-0.5 text-[10px] font-bold bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30 flex items-center gap-1">
+                        Semantic: {s.matched_employee_skill} ({Math.round((s.similarity_score || 0) * 100)}%)
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Category: {s.category || 'Core'} • {s.mandatory ? 'Mandatory Requirement' : 'Optional'}
+                    {s.last_used_date ? ` • Last used: ${s.last_used_date}` : ''}
                   </p>
                 </div>
-                {s.gap > 0 ? (
-                  <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30">
-                    Gap: -{s.gap}
-                  </span>
-                ) : (
-                  <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-bold rounded-lg border border-emerald-500/30">
-                    Satisfied
-                  </span>
-                )}
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-[11px] font-semibold text-slate-400">
+                      {s.effective_level !== undefined && s.effective_level !== s.current_level
+                        ? `Effective: L${s.effective_level} (Nominal L${s.current_level}) / Req: L${s.required_level}`
+                        : `Current: Level ${s.current_level} / Required: Level ${s.required_level}`}
+                    </p>
+                  </div>
+                  {s.gap > 0 ? (
+                    <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30">
+                      Gap: -{s.gap}
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-bold rounded-lg border border-emerald-500/30">
+                      Satisfied
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

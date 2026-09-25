@@ -82,51 +82,80 @@ class LearningService:
 
             if matched_courses:
                 # Recommend the most appropriate course
-                # (lowest difficulty that still covers the gap)
                 course = self._select_best_course(matched_courses, gap["gap"])
-                hours  = course.get("duration_hours", 0)
+                hours = course.get("duration_hours", 0)
                 duration_str = f"{hours} hour{'s' if hours != 1 else ''}" if hours else ""
 
                 impact = self._estimate_skill_impact(mandatory, gap["gap"])
 
-                recommendations.append(RecommendationItem(
-                    type=RecommendationType.LEARNING,
-                    title=f"Complete: {course['course_name']}",
-                    reason=(
+                # Check if semantic match exists
+                match_type = gap.get("match_type")
+                matched_skill = gap.get("matched_employee_skill")
+                sim_pct = int(round(gap.get("similarity_score", 0.0) * 100))
+
+                if match_type in ("STRONG_SEMANTIC_MATCH", "RELATED_SKILL", "PARTIAL_RELEVANCE") and matched_skill:
+                    reason_str = (
+                        f"You already have closely related experience in {matched_skill} ({sim_pct}% semantic match). "
+                        f"Focus on {skill_name}-specific architecture and extensions rather than starting from scratch."
+                    )
+                else:
+                    reason_str = (
                         f"Your '{skill_name}' skill is at level {gap['current_level']} "
                         f"but {gap['required_level']} is required for the target grade "
                         f"(gap = {gap['gap']} level{'s' if gap['gap'] > 1 else ''})."
-                    ),
+                    )
+
+                recommendations.append(RecommendationItem(
+                    type=RecommendationType.LEARNING,
+                    title=f"Complete: {course['course_name']}",
+                    reason=reason_str,
                     priority=priority,
                     provider=course.get("provider", ""),
                     duration=duration_str,
                     impact=impact,
                     metadata={
-                        "course_id":        course.get("course_id"),
-                        "skill":            skill_name,
-                        "skill_gap":        gap["gap"],
-                        "mandatory":        mandatory,
+                        "course_id": course.get("course_id"),
+                        "skill": skill_name,
+                        "skill_gap": gap["gap"],
+                        "mandatory": mandatory,
                         "difficulty_level": course.get("difficulty_level"),
+                        "match_type": match_type,
+                        "matched_employee_skill": matched_skill,
+                        "similarity_score": gap.get("similarity_score"),
                     },
                 ))
             else:
-                # No course found — still surface the gap as a self-study rec
-                recommendations.append(RecommendationItem(
-                    type=RecommendationType.LEARNING,
-                    title=f"Develop skill: {skill_name}",
-                    reason=(
+                match_type = gap.get("match_type")
+                matched_skill = gap.get("matched_employee_skill")
+                sim_pct = int(round(gap.get("similarity_score", 0.0) * 100))
+
+                if match_type in ("STRONG_SEMANTIC_MATCH", "RELATED_SKILL", "PARTIAL_RELEVANCE") and matched_skill:
+                    reason_str = (
+                        f"You have related experience in {matched_skill} ({sim_pct}% semantic match). "
+                        f"Build upon this to master required {skill_name} patterns."
+                    )
+                else:
+                    reason_str = (
                         f"No specific course is listed for '{skill_name}', "
                         f"but your level ({gap['current_level']}) is below the "
                         f"required level ({gap['required_level']}) for the target grade."
-                    ),
+                    )
+
+                recommendations.append(RecommendationItem(
+                    type=RecommendationType.LEARNING,
+                    title=f"Develop skill: {skill_name}",
+                    reason=reason_str,
                     priority=priority,
                     provider="Self-study / On-the-job",
                     duration="",
                     impact=self._estimate_skill_impact(mandatory, gap["gap"]),
                     metadata={
-                        "skill":     skill_name,
+                        "skill": skill_name,
                         "skill_gap": gap["gap"],
                         "mandatory": mandatory,
+                        "match_type": match_type,
+                        "matched_employee_skill": matched_skill,
+                        "similarity_score": gap.get("similarity_score"),
                     },
                 ))
 
